@@ -12,19 +12,19 @@ export default function AccountPage() {
       router.push("/auth/login")
     }
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <aside className="w-64 bg-white border-r border-gray-200 p-8 flex flex-col justify-between">
+    <div className="min-h-screen bg-black-50 flex">
+      <aside className="w-64 bg-white border-r border-black-200 p-8 flex flex-col justify-between">
         <div>
           <h2 className="text-xl font-semibold mb-8">My account</h2>
           <nav className="flex flex-col gap-6 text-sm font-medium">
             <a href="#" className="text-black">Personal & security</a>
-            <a href="#" className="text-gray-500 hover:text-black transition">My orders</a>
+            <a href="#" className="text-black-500 hover:text-black transition">My orders</a>
           </nav>
         </div>
 
         <button
           onClick={handleLogout}
-          className="text-sm text-gray-500 hover:text-black transition"
+          className="text-sm text-black-500 hover:text-black transition"
         >
           Log out
         </button>

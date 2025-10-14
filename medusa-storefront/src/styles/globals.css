@@ -110,3 +110,12 @@
     @apply text-[32px] leading-[44px] font-semibold;
   }
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -30,7 +30,7 @@ export default function AddressSection() {
   })
 
   if (isLoading)
-    return <p className="text-gray-500">Loading address...</p>
+    return <p className="text-black-500">Loading address...</p>
 
   const startEditing = () => {
     if (address) {
@@ -75,9 +75,9 @@ export default function AddressSection() {
 
       {!editing ? (
         address ? (
-          <div className="border border-gray-200 rounded-md p-4 flex justify-between items-start">
+          <div className="border border-black-200 rounded-md p-4 flex justify-between items-start">
             <div>
-              <p className="text-sm text-gray-500 mb-1">Saved address</p>
+              <p className="text-sm text-black-500 mb-1">Saved address</p>
               <p className="font-medium">{address.address_1}</p>
               {address.address_2 && <p>{address.address_2}</p>}
               <p>
@@ -85,11 +85,11 @@ export default function AddressSection() {
               </p>
               {address.province && <p>{address.province}</p>}
               <p>{address.country_code?.toUpperCase()}</p>
-              {address.phone && <p className="text-sm text-gray-500 mt-1">{address.phone}</p>}
+              {address.phone && <p className="text-sm text-black-500 mt-1">{address.phone}</p>}
             </div>
             <button
               onClick={startEditing}
-              className="border border-gray-300 rounded-md px-4 py-1 text-sm hover:bg-gray-100 h-fit"
+              className="border border-black-300 rounded-md px-4 py-1 text-sm hover:bg-black-100 h-fit"
             >
               Change
             </button>
@@ -103,20 +103,20 @@ export default function AddressSection() {
           </button>
         )
       ) : (
-        <div className="border border-gray-200 rounded-md p-4 flex flex-col gap-2 w-full">
+        <div className="border border-black-200 rounded-md p-4 flex flex-col gap-2 w-full">
           <input
             name="address_1"
             value={form.address_1}
             onChange={handleChange}
             placeholder="Address line 1"
-            className="border border-gray-300 rounded-md px-3 py-2"
+            className="border border-black-300 rounded-md px-3 py-2"
           />
           <input
             name="address_2"
             value={form.address_2}
             onChange={handleChange}
             placeholder="Address line 2 (optional)"
-            className="border border-gray-300 rounded-md px-3 py-2"
+            className="border border-black-300 rounded-md px-3 py-2"
           />
           <div className="flex gap-2">
             <input
@@ -124,14 +124,14 @@ export default function AddressSection() {
               value={form.city}
               onChange={handleChange}
               placeholder="City"
-              className="border border-gray-300 rounded-md px-3 py-2 w-1/2"
+              className="border border-black-300 rounded-md px-3 py-2 w-1/2"
             />
             <input
               name="postal_code"
               value={form.postal_code}
               onChange={handleChange}
               placeholder="Postal code"
-              className="border border-gray-300 rounded-md px-3 py-2 w-1/2"
+              className="border border-black-300 rounded-md px-3 py-2 w-1/2"
             />
           </div>
           <input
@@ -139,21 +139,21 @@ export default function AddressSection() {
             value={form.province}
             onChange={handleChange}
             placeholder="Province (optional)"
-            className="border border-gray-300 rounded-md px-3 py-2"
+            className="border border-black-300 rounded-md px-3 py-2"
           />
           <input
             name="country_code"
             value={form.country_code}
             onChange={handleChange}
             placeholder="Country code (e.g. hr)"
-            className="border border-gray-300 rounded-md px-3 py-2"
+            className="border border-black-300 rounded-md px-3 py-2"
           />
           <input
             name="phone"
             value={form.phone}
             onChange={handleChange}
             placeholder="Phone (optional)"
-            className="border border-gray-300 rounded-md px-3 py-2"
+            className="border border-black-300 rounded-md px-3 py-2"
           />
 
           <div className="flex gap-3 mt-2">
@@ -166,7 +166,7 @@ export default function AddressSection() {
             </button>
             <button
               onClick={() => setEditing(false)}
-              className="border border-gray-300 rounded-md px-4 py-2 text-sm hover:bg-gray-100"
+              className="border border-black-300 rounded-md px-4 py-2 text-sm hover:bg-black-100"
             >
               Cancel
             </button>

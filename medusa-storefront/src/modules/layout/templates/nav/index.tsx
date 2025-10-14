@@ -29,7 +29,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center py-6 px-8">
         <div className="flex items-center gap-4 text-xl font-semibold tracking-tight text-black">
           <Link href="/">SofaSocietyCo.</Link>
-          <span className="text-sm text-gray-500">{customer?.email || "offline"}</span>
+          <span className="text-sm text-black-500">{customer?.email || "offline"}</span>
         </div>
 
         <nav className="flex gap-10 text-sm font-medium">
@@ -47,7 +47,7 @@ export default function Header() {
               {lang} ▼
             </button>
             {isOpen && (
-              <div className="absolute right-0 mt-2 w-24 bg-white border border-gray-200 rounded-md shadow-md z-10">
+              <div className="absolute right-0 mt-2 w-24 bg-white border border-black-200 rounded-md shadow-md z-10">
                 {["EN", "DE", "FR", "IT", "ES"].map((code) => (
                   <button
                     key={code}
@@ -55,7 +55,7 @@ export default function Header() {
                       setLang(code)
                       setIsOpen(false)
                     }}
-                    className="block w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                    className="block w-full text-left px-3 py-2 text-sm hover:bg-black-100"
                   >
                     {code}
                   </button>

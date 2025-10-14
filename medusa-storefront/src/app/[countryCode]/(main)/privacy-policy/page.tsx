@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
   return (
     <div>
     
-    <main className="min-h-screen flex flex-col items-center px-6 py-20 bg-white text-gray-900 mt-16">
+    <main className="min-h-screen flex flex-col items-center px-6 py-20 bg-white text-black-900 mt-16">
       <div className="max-w-3xl w-full">
         <h1 className="text-3xl font-semibold mb-6 text-center">
           Privacy Policy for Sofa Society

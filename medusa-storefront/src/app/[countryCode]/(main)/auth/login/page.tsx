@@ -58,7 +58,7 @@ export default function LoginPage() {
               placeholder="Email"
               value={form.email}
               onChange={handleChange}
-              className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-1 focus:ring-black text-base"
+              className="border border-black-300 rounded-md px-4 py-3 focus:outline-none focus:ring-1 focus:ring-black text-base"
               required
             />
 
@@ -72,7 +72,7 @@ export default function LoginPage() {
                 className={`border rounded-md px-4 py-3 focus:outline-none focus:ring-1 text-base ${
                   passwordError
                     ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-black"
+                    : "border-black-300 focus:ring-black"
                 }`}
                 required
               />
@@ -94,7 +94,7 @@ export default function LoginPage() {
             )}
           </form>
 
-          <p className="text-sm text-gray-600 mt-8 text-center">
+          <p className="text-sm text-black-600 mt-8 text-center">
             You don’t have an account yet?{" "}
             <Link href="/auth/register" className="underline">
               Register
@@ -102,7 +102,7 @@ export default function LoginPage() {
             .
           </p>
 
-          <p className="text-sm text-gray-600 mt-2 text-center">
+          <p className="text-sm text-black-600 mt-2 text-center">
             Forgot your password?{" "}
             <Link href="#" className="underline">
               Reset your password

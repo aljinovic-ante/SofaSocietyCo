@@ -68,7 +68,7 @@ export default function RegisterPage() {
                 placeholder="First name"
                 value={form.first_name}
                 onChange={handleChange}
-                className="border border-gray-300 rounded-md px-4 py-3 w-1/2 focus:outline-none focus:ring-1 focus:ring-black text-base"
+                className="border border-black-300 rounded-md px-4 py-3 w-1/2 focus:outline-none focus:ring-1 focus:ring-black text-base"
                 required
               />
               <input
@@ -77,7 +77,7 @@ export default function RegisterPage() {
                 placeholder="Last name"
                 value={form.last_name}
                 onChange={handleChange}
-                className="border border-gray-300 rounded-md px-4 py-3 w-1/2 focus:outline-none focus:ring-1 focus:ring-black text-base"
+                className="border border-black-300 rounded-md px-4 py-3 w-1/2 focus:outline-none focus:ring-1 focus:ring-black text-base"
                 required
               />
             </div>
@@ -88,7 +88,7 @@ export default function RegisterPage() {
               placeholder="Email"
               value={form.email}
               onChange={handleChange}
-              className="border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-1 focus:ring-black text-base"
+              className="border border-black-300 rounded-md px-4 py-3 focus:outline-none focus:ring-1 focus:ring-black text-base"
               required
             />
 
@@ -101,7 +101,7 @@ export default function RegisterPage() {
               className={`border rounded-md px-4 py-3 focus:outline-none focus:ring-1 text-base ${
                 passwordError
                   ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-300 focus:ring-black"
+                  : "border-black-300 focus:ring-black"
               }`}
               required
             />
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                 className={`border rounded-md px-4 py-3 focus:outline-none focus:ring-1 text-base ${
                   passwordError
                     ? "border-red-500 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-black"
+                    : "border-black-300 focus:ring-black"
                 }`}
                 required
               />
@@ -138,7 +138,7 @@ export default function RegisterPage() {
             )}
           </form>
 
-          <p className="text-sm text-gray-600 mt-8 text-center">
+          <p className="text-sm text-black-600 mt-8 text-center">
             Already have an account? No worries, just{" "}
             <Link href="/auth/login" className="underline">
               Log in
