@@ -37,7 +37,7 @@ export const loginFormSchema = z.object({
 
 export const useLogin = (
   options?: UseMutationOptions<
-    { success: boolean; redirectUrl?: string; message?: string },
+    { success: boolean; message?: string },
     Error,
     z.infer<typeof loginFormSchema>
   >
@@ -53,13 +53,13 @@ export const useLogin = (
           formData.append(key, value.toString())
       }
 
-      await login(formData)
-      return { success: true, redirectUrl: "/account" }
+      const result = await login(formData)
+      return result
     },
 
-    onSuccess: async (...args) => {
+    onSuccess: async (data, ...args) => {
       await client.invalidateQueries({ queryKey: ["customer"] })
-      await options?.onSuccess?.(...args)
+      await options?.onSuccess?.(data, ...args)
     },
     ...options,
   })
