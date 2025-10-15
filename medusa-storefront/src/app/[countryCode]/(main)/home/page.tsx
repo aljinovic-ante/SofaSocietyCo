@@ -16,7 +16,7 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center py-20">
+        <div className="flex flex-col md:flex-row justify-between items-center py-5">
           <h2 className="text-4xl md:text-[40px] font-semibold leading-tight max-w-[570px]">
             Elevate Your Living Space with Unmatched Comfort & Style
           </h2>
@@ -33,7 +33,7 @@ export default function HomePage() {
 
       </section>
 
-      <section className="py-20 px-6 md:px-12 max-w-6xl mx-auto">
+      <section className="py-5 px-6 md:px-12 max-w-6xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-semibold mb-10">Our products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="flex flex-col items-center">

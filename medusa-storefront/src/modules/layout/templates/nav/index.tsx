@@ -24,6 +24,8 @@ export default function Header() {
     })
   }
 
+  const languages = ["HR", "EN", "DE", "FR", "IT", "ES"]
+
   return (
     <header className="fixed top-0 left-0 w-full bg-white z-50 shadow-sm">
       <div className="max-w-7xl mx-auto flex justify-between items-center py-6 px-8">
@@ -33,9 +35,9 @@ export default function Header() {
         </div>
 
         <nav className="flex gap-10 text-sm font-medium">
-          <Link href="#" className="text-black hover:opacity-70 transition">About</Link>
-          <Link href="#" className="text-black hover:opacity-70 transition">Inspiration</Link>
-          <Link href="#" className="text-black hover:opacity-70 transition">Shop</Link>
+          <Link href="/about" className="text-black hover:opacity-70 transition">About</Link>
+          <Link href="/inspiration" className="text-black hover:opacity-70 transition">Inspiration</Link>
+          <Link href="/shop" className="text-black hover:opacity-70 transition">Shop</Link>
         </nav>
 
         <div className="flex items-center gap-6 text-black text-sm font-medium">
@@ -48,18 +50,20 @@ export default function Header() {
             </button>
             {isOpen && (
               <div className="absolute right-0 mt-2 w-24 bg-white border border-black-200 rounded-md shadow-md z-10">
-                {["EN", "DE", "FR", "IT", "ES"].map((code) => (
-                  <button
-                    key={code}
-                    onClick={() => {
-                      setLang(code)
-                      setIsOpen(false)
-                    }}
-                    className="block w-full text-left px-3 py-2 text-sm hover:bg-black-100"
-                  >
-                    {code}
-                  </button>
-                ))}
+                {languages
+                  .filter((code) => code !== lang)
+                  .map((code) => (
+                    <button
+                      key={code}
+                      onClick={() => {
+                        setLang(code)
+                        setIsOpen(false)
+                      }}
+                      className="block w-full text-left px-3 py-2 text-sm hover:bg-black-100"
+                    >
+                      {code}
+                    </button>
+                  ))}
               </div>
             )}
           </div>

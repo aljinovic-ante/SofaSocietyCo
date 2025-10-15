@@ -20,6 +20,15 @@ const nextConfig = {
       },
     ]
   },
+  async redirects(){
+    return[
+      {
+        source: "/hr",
+        destination: "/hr/home",
+        permanent:true,
+      },
+    ]
+  },
   reactStrictMode: true,
   logging: {
     fetches: {
