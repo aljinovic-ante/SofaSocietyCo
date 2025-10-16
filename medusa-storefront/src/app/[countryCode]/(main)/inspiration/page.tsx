@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import CollectionsSection from "../home/Collections"
+import CollectionsSection from "../home/CollectionsMenu"
 
 export default function InspirationPage() {
   return (

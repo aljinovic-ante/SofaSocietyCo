@@ -53,8 +53,7 @@ export const listProducts = async ({
     ...(await getCacheOptions("products")),
   }
 
-  return sdk.client
-    .fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
+    return sdk.client.fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
       `/store/products`,
       {
         method: "GET",
@@ -62,10 +61,10 @@ export const listProducts = async ({
           limit,
           offset,
           fields:
-            "*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags,+categories",
-          ...queryParams,
+            "id,title,handle,thumbnail,images,collection.*,categories.*,metadata,tags.*,variants.id,variants.title,variants.inventory_quantity,variants.prices.*,variants.calculated_price.*",
           region_id: region?.id,
-      },
+          ...queryParams,
+        },
         headers,
         next,
         cache: "force-cache",
@@ -105,24 +104,20 @@ export const listProductsWithSort = async ({
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> => {
   const limit = queryParams?.limit || 12
+  const region = await getRegion(countryCode)
 
   const {
     response: { products, count },
   } = await listProducts({
     pageParam: 0,
-    queryParams: {
-      ...queryParams,
-      limit: 100,
-    },
+    queryParams: { ...queryParams, limit: 100 },
     countryCode,
+    regionId: region?.id,
   })
-
+  console.log(products[0])
   const sortedProducts = sortProducts(products, sortBy)
-
   const pageParam = (page - 1) * limit
-
   const nextPage = count > pageParam + limit ? pageParam + limit : null
-
   const paginatedProducts = sortedProducts.slice(pageParam, pageParam + limit)
 
   return {

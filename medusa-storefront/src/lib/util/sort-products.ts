@@ -25,7 +25,9 @@ export function sortProducts(
 
     return [...products].sort((a, b) => {
       const priceA = a.variants?.[0]?.calculated_price?.calculated_amount ?? 0
+      console.log("A: ",a.variants)
       const priceB = b.variants?.[0]?.calculated_price?.calculated_amount ?? 0
+      console.log("B: ",b.variants)
       return priceB - priceA
     })
   }

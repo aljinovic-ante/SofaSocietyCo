@@ -25,6 +25,7 @@ export default async function PaginatedProducts({
 }) {
   const region = await getRegion(countryCode)
   if (!region) return null
+  console.log("Region:", region)
 
   const queryParams: Record<string, any> = {
     limit: PRODUCT_LIMIT,
@@ -102,7 +103,7 @@ export default async function PaginatedProducts({
               </p>
 
               <p className="text-xs text-neutral-400 mt-1">
-                Categories:{" "}
+                {" "}
                 {p.categories?.length
                   ? p.categories.map((c) => c.name).join(", ")
                   : "No categories"}

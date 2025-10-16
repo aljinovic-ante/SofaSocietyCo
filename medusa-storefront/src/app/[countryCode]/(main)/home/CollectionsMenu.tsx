@@ -46,13 +46,15 @@ export default function CollectionsSection() {
     },
   ]
 
+  const countryCode = "hr"
+
   return (
     <section className="py-20 px-6 md:px-12 max-w-[1200px] mx-auto overflow-hidden">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-2xl md:text-3xl font-semibold">Collections</h2>
         <div className="flex items-center gap-3">
           <Link
-            href="/collections"
+            href="/hr/collections"
             className="text-xs bg-black text-white px-4 py-2 rounded hover:opacity-90"
           >
             View All
@@ -78,22 +80,35 @@ export default function CollectionsSection() {
         ref={scrollRef}
         className="flex gap-[40px] overflow-x-auto scroll-smooth scrollbar-hide snap-x snap-mandatory"
       >
-        {collections.map((col, i) => (
-          <div
-            key={i}
-            className="w-[396px] flex-shrink-0 flex flex-col snap-center"
-          >
-            <Image
-              src={col.image}
-              alt={col.title}
-              width={396}
-              height={600}
-              className="w-[396px] h-[600px] object-cover rounded-lg"
-            />
-            <h3 className="mt-4 font-medium text-lg">{col.title}</h3>
-            <p className="text-sm text-black-600 mt-1">{col.description}</p>
-          </div>
-        ))}
+        {collections.map((col, i) => {
+          const handle = col.title.replace(/\s+/g, "-").toLowerCase()
+          const href = `/${countryCode}/collections/${handle}`
+
+          return (
+            <div
+              key={i}
+              className="w-[396px] flex-shrink-0 flex flex-col snap-center"
+            >
+              <Link href={href} className="group">
+                <Image
+                  src={col.image}
+                  alt={col.title}
+                  width={396}
+                  height={600}
+                  className="w-[396px] h-[600px] object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                />
+              </Link>
+
+              <Link href={href}>
+                <h3 className="mt-4 font-medium text-lg hover:underline">
+                  {col.title}
+                </h3>
+              </Link>
+
+              <p className="text-sm text-black-600 mt-1">{col.description}</p>
+            </div>
+          )
+        })}
       </div>
     </section>
   )

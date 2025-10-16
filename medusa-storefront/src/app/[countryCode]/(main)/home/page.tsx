@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import CollectionsSection from "./Collections"
+import CollectionsSection from "./CollectionsMenu"
 
 export default function HomePage() {
   return (

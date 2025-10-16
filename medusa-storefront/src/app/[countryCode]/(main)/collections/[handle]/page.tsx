@@ -12,13 +12,13 @@ const collections = [
     title: "Scandinavian Simplicity",
     description:
       "Minimalistic designs, neutral colors, and high-quality textures. Perfect for those who seek comfort with a clean and understated aesthetic.",
-    image: "/images/homepage/image 3.png",
+    image: "/images/homepage/scan-simp.png",
   },
   {
     title: "Modern Luxe",
     description:
       "Sophisticated and sleek, these sofas blend modern design with luxurious comfort. Perfect for those who love refinement and timeless design.",
-    image: "/images/homepage/9176ac4e43f584f40878ed292d00ce6f88fb89ed.png",
+    image: "/images/homepage/image (3).png",
   },
   {
     title: "Boho Chic",
@@ -84,44 +84,42 @@ export default async function CollectionPage({ params, searchParams }: Props) {
   )
 
   return (
-    <main className="text-black pb-24">
-      <section className="relative w-full h-[20vh] md:h-[50vh] overflow-hidden">
-        <Image
-          src={localCollection?.image || "/images/homepage/image.png"}
-          alt={localCollection?.title || medusaCollection.title}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/10" />
-      </section>
+      <main className="text-black pb-24">
+        <section className="max-w-7xl mx-auto flex flex-col items-center px-6 md:px-12 py-5">
+          <div className="w-full overflow-hidden rounded-md">
+            <img
+                  src={localCollection?.image || "/images/homepage/image.png"}
+                  alt={localCollection?.title || medusaCollection.title}
+                  className="w-full h-auto rounded-md object-cover"
+                />
+          </div>
+        </section>
 
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-20 grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-4">
-            {localCollection?.title || medusaCollection.title}
-          </h1>
-        </div>
+        <section className="max-w-7xl mx-auto px-6 md:px-12 py-20 grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-4">
+              {localCollection?.title || medusaCollection.title}
+            </h1>
+          </div>
 
-        <div className="text-neutral-600 leading-relaxed text-lg">
-          <p className="mb-4">{localCollection?.description}</p>
-          <p>
-            This collection brings the essence of{" "}
-            <strong className="font-bold">
-              {(localCollection?.title || medusaCollection.title).toUpperCase()}{" "}
-            </strong>
-            into your living room.
-          </p>
-        </div>
-      </section>
+          <div className="text-neutral-600 leading-relaxed text-lg">
+            <p className="mb-4">{localCollection?.description}</p>
+            <p>
+              This collection brings the essence of{" "}
+              <strong className="font-bold">
+                {(localCollection?.title || medusaCollection.title).toUpperCase()}{" "}
+              </strong>
+              into your living room.
+            </p>
+          </div>
+        </section>
 
-    <CollectionTemplate
-      collection={medusaCollection}
-      page={page}
-      countryCode={countryCode}
-      searchParams={{ category, sortBy }}
-    />
-
+      <CollectionTemplate
+        collection={medusaCollection}
+        page={page}
+        countryCode={countryCode}
+        searchParams={{ category, sortBy }}
+      />
     </main>
   )
 }
