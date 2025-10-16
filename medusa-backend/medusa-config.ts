@@ -15,6 +15,12 @@ export default defineConfig({
   },
 
   modules: {
+    pricing: {
+      resolve: "@medusajs/pricing",
+    },
+    product: {
+      resolve: "@medusajs/product",
+    },
     eventBus: {
       resolve: "@medusajs/event-bus-local",
     },

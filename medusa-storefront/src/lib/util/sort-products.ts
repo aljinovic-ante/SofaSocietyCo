@@ -1,50 +1,44 @@
 import { HttpTypes } from "@medusajs/types"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 
-interface MinPricedProduct extends HttpTypes.StoreProduct {
-  _minPrice?: number
-}
-
-/**
- * Helper function to sort products by price until the store API supports sorting by price
- * @param products
- * @param sortBy
- * @returns products sorted by price
- */
 export function sortProducts(
   products: HttpTypes.StoreProduct[],
   sortBy: SortOptions
-): HttpTypes.StoreProduct[] {
-  let sortedProducts = products as MinPricedProduct[]
+) {
+  console.log("USLO")
 
-  if (["price_asc", "price_desc"].includes(sortBy)) {
-    // Precompute the minimum price for each product
-    sortedProducts.forEach((product) => {
-      if (product.variants && product.variants.length > 0) {
-        product._minPrice = Math.min(
-          ...product.variants.map(
-            (variant) => variant?.calculated_price?.calculated_amount || 0
-          )
-        )
-      } else {
-        product._minPrice = Infinity
-      }
-    })
+  if (sortBy === "price_asc") {
+    console.log("USLO1")
+    
+    return [...products].sort((a, b) => {
+      const priceA = a.variants?.[0]?.calculated_price?.calculated_amount ?? 0
+      console.log("A: ",a.variants)
+      const priceB = b.variants?.[0]?.calculated_price?.calculated_amount ?? 0
+      console.log("B: ",b.variants)
 
-    // Sort products based on the precomputed minimum prices
-    sortedProducts.sort((a, b) => {
-      const diff = a._minPrice! - b._minPrice!
-      return sortBy === "price_asc" ? diff : -diff
+      return priceA - priceB
     })
   }
 
-  if (sortBy === "created_at") {
-    sortedProducts.sort((a, b) => {
-      return (
-        new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime()
-      )
+  if (sortBy === "price_desc") {
+    console.log("USLO2")
+
+    return [...products].sort((a, b) => {
+      const priceA = a.variants?.[0]?.calculated_price?.calculated_amount ?? 0
+      const priceB = b.variants?.[0]?.calculated_price?.calculated_amount ?? 0
+      return priceB - priceA
     })
   }
 
-  return sortedProducts
+  return [...products].sort((a, b) => {
+    console.log("USLO3")
+
+    const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+    console.log("A: ",dateA)
+
+    const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+    console.log("B: ",dateB)
+
+    return dateB - dateA
+  })
 }

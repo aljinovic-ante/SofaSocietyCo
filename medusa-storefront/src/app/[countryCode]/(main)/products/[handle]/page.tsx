@@ -1,106 +1,50 @@
-import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { listProducts } from "@lib/data/products"
-import { getRegion, listRegions } from "@lib/data/regions"
-import ProductTemplate from "@modules/products/templates"
+import ProductClient from "./product-client"
 
-type Props = {
+type ProductPageProps = {
   params: Promise<{ countryCode: string; handle: string }>
 }
 
-export async function generateStaticParams() {
-  try {
-    const countryCodes = await listRegions().then((regions) =>
-      regions?.map((r) => r.countries?.map((c) => c.iso_2)).flat()
-    )
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { handle } = await params
 
-    if (!countryCodes) {
-      return []
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/products?handle=${handle}&region_id=reg_01K7P8H7TRF9E0AXS39PAGVT5H`,
+    {
+      headers: {
+        "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
     }
-
-    const promises = countryCodes.map(async (country) => {
-      const { response } = await listProducts({
-        countryCode: country,
-        queryParams: { limit: 100, fields: "handle" },
-      })
-
-      return {
-        country,
-        products: response.products,
-      }
-    })
-
-    const countryProducts = await Promise.all(promises)
-
-    return countryProducts
-      .flatMap((countryData) =>
-        countryData.products.map((product) => ({
-          countryCode: countryData.country,
-          handle: product.handle,
-        }))
-      )
-      .filter((param) => param.handle)
-  } catch (error) {
-    console.error(
-      `Failed to generate static paths for product pages: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }.`
-    )
-    return []
-  }
-}
-
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const params = await props.params
-  const { handle } = params
-  const region = await getRegion(params.countryCode)
-
-  if (!region) {
-    notFound()
-  }
-
-  const product = await listProducts({
-    countryCode: params.countryCode,
-    queryParams: { handle },
-  }).then(({ response }) => response.products[0])
-
-  if (!product) {
-    notFound()
-  }
-
-  return {
-    title: `${product.title} | Medusa Store`,
-    description: `${product.title}`,
-    openGraph: {
-      title: `${product.title} | Medusa Store`,
-      description: `${product.title}`,
-      images: product.thumbnail ? [product.thumbnail] : [],
-    },
-  }
-}
-
-export default async function ProductPage(props: Props) {
-  const params = await props.params
-  const region = await getRegion(params.countryCode)
-
-  if (!region) {
-    notFound()
-  }
-
-  const pricedProduct = await listProducts({
-    countryCode: params.countryCode,
-    queryParams: { handle: params.handle },
-  }).then(({ response }) => response.products[0])
-
-  if (!pricedProduct) {
-    notFound()
-  }
-
-  return (
-    <ProductTemplate
-      product={pricedProduct}
-      region={region}
-      countryCode={params.countryCode}
-    />
   )
+
+
+  if (!res.ok) {
+    console.error("Failed to fetchhhhhhh......:", await res.text())
+    notFound()
+  }
+
+  const data = await res.json()
+  const product = data.products?.[0]
+  if (!product) notFound()
+  if (product.variants?.length) {
+    console.log(`Variants for "${product.title}":`)
+    product.variants.forEach((variant: any) => {
+      const calc = variant.calculated_price
+      const price = calc?.calculated_amount
+        ? `${(calc.calculated_amount / 100).toFixed(2)} ${calc.currency_code?.toUpperCase()}`
+        : "Error"
+
+      console.log({
+        id: variant.id,
+        title: variant.title,
+        price,
+      })
+    })
+  } else {
+    console.log("No variants found for this product.")
+  }
+
+  return <ProductClient product={product} />
 }

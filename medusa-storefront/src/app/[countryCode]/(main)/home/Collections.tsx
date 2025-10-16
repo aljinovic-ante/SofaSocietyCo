@@ -38,7 +38,7 @@ export default function CollectionsSection() {
         "/images/homepage/2f65c59ba6ffc70cd10f9cc6555184149e334e59.png",
     },
     {
-      title: "Urban Retreat",
+      title: "Timeless Classics",
       description:
         "Modern silhouettes and cozy fabrics create an inviting atmosphere",
       image:

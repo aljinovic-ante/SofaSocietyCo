@@ -1,0 +1,16 @@
+export const COLORS: Record<string, string> = {
+  "Purple": "#800080",
+  "Dark Gray": "#4B4B4B",
+  "Red": "#FF0000",
+  "Beige": "#F5F5DC",
+  "Blue": "#3023c0ff",
+  "Black": "#3C2F2F",
+  "Orange": "#FFA500",
+  "Light Gray": "#D3D3D3",
+  "Green": "#008000",
+  "Yellow": "#f9f06fff",
+  "Beige White": "#FDF5E6",
+  "Violet": "#EE82EE",
+  "Beige Yellow": "#F5DEB3",
+  "Gray": "#808080",
+}
