@@ -59,7 +59,7 @@ export default async function PaginatedProducts({
       )
     : products
 
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCT_LIMIT)
+  const totalPages = Math.ceil(count / PRODUCT_LIMIT)
 
   filteredProducts.forEach((p) => {
     console.log("Server ovde 4 ->", p.title, p.categories?.map((c) => c.name))

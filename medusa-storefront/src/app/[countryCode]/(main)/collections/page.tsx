@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 
-export default function CollectionsGrid() {
+export default function CollectionsGrid({ showTitle = true }: { showTitle?: boolean }) {
   const collections = [
     {
       title: "Scandinavian Simplicity",
@@ -37,9 +37,13 @@ export default function CollectionsGrid() {
 
   return (
     <section className="py-16 px-4 md:px-10 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-semibold mb-10 text-center py-10">All our collections</h1>
+      {showTitle && (
+        <h1 className="text-3xl font-semibold mb-10 text-center py-10">
+          All our collections
+        </h1>
+      )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {collections.map((col, i) => {
           const handle = col.title.replace(/\s+/g, "-").toLowerCase()
           const href = `/${countryCode}/collections/${handle}`
