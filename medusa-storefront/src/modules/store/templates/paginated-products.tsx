@@ -14,6 +14,7 @@ export default async function PaginatedProducts({
   productsIds,
   countryCode,
   categoryFilter,
+  collectionFilter,
 }: {
   sortBy?: SortOptions
   page: number
@@ -22,48 +23,77 @@ export default async function PaginatedProducts({
   productsIds?: string[]
   countryCode: string
   categoryFilter?: string
+  collectionFilter?: string
 }) {
   const region = await getRegion(countryCode)
   if (!region) return null
-  console.log("Region:", region)
 
   const queryParams: Record<string, any> = {
-    limit: PRODUCT_LIMIT,
-    collection_id: collectionId || undefined,
-    category_id: typeof categoryId === "string" ? categoryId : undefined,
+    limit: 100,
     region_id: region.id,
   }
 
   const {
-    response: { products, count },
+    response: { products },
   } = await listProductsWithSort({
-    page,
+    page: 1,
     queryParams,
     sortBy,
     countryCode,
   })
 
-  const filter = categoryFilter?.toLowerCase()?.trim()
-  const isFiltering = filter && filter !== "all"
+  const catFilter = categoryFilter?.toLowerCase()?.trim()
+  const collFilter = collectionFilter?.toLowerCase()?.trim()
+  const isCatFiltering = catFilter && catFilter !== "all"
+  const isCollFiltering = collFilter && collFilter !== "all"
 
-  const filteredProducts = isFiltering
-    ? products.filter((p) =>
-        p.categories?.some((cat) => {
-          const name = cat.name?.toLowerCase() || ""
-          const handle = cat.handle?.toLowerCase() || ""
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory = !isCatFiltering
+      ? true
+      : p.categories?.some((cat) => {
+          const name = cat.name?.toLowerCase().replace(/-/g, " ") || ""
+          const handle = cat.handle?.toLowerCase().replace(/-/g, " ") || ""
+          const normalized = catFilter.replace(/-/g, " ")
+          const synonyms: Record<string, string[]> = {
+            "one seater": ["1 seater", "single seater"],
+            "two seater": ["2 seater", "double seater"],
+            "three seater": ["3 seater", "triple seater"],
+          }
+          const altMatches = synonyms[normalized]?.some(
+            (alt) => name.includes(alt) || handle.includes(alt)
+          )
           return (
-            name.includes(filter.replace("-", " ")) ||
-            handle.includes(filter.replace("-", " "))
+            name.includes(normalized) ||
+            handle.includes(normalized) ||
+            altMatches
           )
         })
-      )
-    : products
 
-  const totalPages = Math.ceil(count / PRODUCT_LIMIT)
+    const matchesCollection = !isCollFiltering
+      ? true
+      : (() => {
+          const title = p.collection?.title?.toLowerCase().replace(/-/g, " ") || ""
+          const handle = p.collection?.handle?.toLowerCase().replace(/-/g, " ") || ""
+          const normalized = collFilter.replace(/-/g, " ")
+          return title.includes(normalized) || handle.includes(normalized)
+        })()
 
-  filteredProducts.forEach((p) => {
-    console.log("Server ovde 4 ->", p.title, p.categories?.map((c) => c.name))
+    return matchesCategory && matchesCollection
   })
+
+  const totalFilteredCount = filteredProducts.length
+  const totalPages = Math.ceil(totalFilteredCount / PRODUCT_LIMIT)
+  const startIndex = (page - 1) * PRODUCT_LIMIT
+  const endIndex = startIndex + PRODUCT_LIMIT
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex)
+
+  if (paginatedProducts.length === 0) {
+    return (
+      <p className="text-center text-neutral-500 mt-12">
+        No products found.
+      </p>
+    )
+  }
 
   return (
     <>
@@ -71,7 +101,7 @@ export default async function PaginatedProducts({
         className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-3 gap-x-6 gap-y-8 flex-1"
         data-testid="products-list"
       >
-        {filteredProducts.map((p) => (
+        {paginatedProducts.map((p) => (
           <li key={p.id} className="flex flex-col">
             <Link href={`/products/${p.handle}`} className="group">
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-neutral-100">
@@ -103,7 +133,6 @@ export default async function PaginatedProducts({
               </p>
 
               <p className="text-xs text-neutral-400 mt-1">
-                {" "}
                 {p.categories?.length
                   ? p.categories.map((c) => c.name).join(", ")
                   : "No categories"}

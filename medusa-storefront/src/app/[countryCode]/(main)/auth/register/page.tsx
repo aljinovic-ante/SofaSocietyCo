@@ -7,7 +7,7 @@ import { useSignup } from "@/hooks/customer"
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { mutateAsync: signup, isPending, error } = useSignup()
+  const { mutateAsync: signup, isPending } = useSignup()
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -16,10 +16,12 @@ export default function RegisterPage() {
     last_name: "",
   })
   const [passwordError, setPasswordError] = useState("")
+  const [formError, setFormError] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
     setPasswordError("")
+    setFormError("")
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,8 +38,18 @@ export default function RegisterPage() {
     }
 
     setPasswordError("")
-    await signup(form)
-    router.push("/account")
+    setFormError("")
+
+    try {
+      const result = await signup(form)
+      if (result?.success) {
+        router.push("/account")
+      } else {
+        setFormError(result?.error || "Registration failed.")
+      }
+    } catch (err: any) {
+      setFormError(err.message || "Registration failed.")
+    }
   }
 
   return (
@@ -125,6 +137,12 @@ export default function RegisterPage() {
               )}
             </div>
 
+            {formError && (
+              <p className="text-red-500 text-sm text-left -mt-0">
+                {formError}
+              </p>
+            )}
+
             <button
               type="submit"
               disabled={isPending}
@@ -132,10 +150,6 @@ export default function RegisterPage() {
             >
               {isPending ? "Registering..." : "Register"}
             </button>
-
-            {error && (
-              <p className="text-red-500 text-sm mt-2">{String(error)}</p>
-            )}
           </form>
 
           <p className="text-sm text-black-600 mt-8 text-center">

@@ -35,11 +35,14 @@ export function Pagination({
   ) => (
     <button
       key={p}
-      className={clx("txt-xlarge-plus text-ui-fg-muted", {
-        "text-ui-fg-base hover:text-ui-fg-subtle": isCurrent,
-      })}
-      disabled={isCurrent}
       onClick={() => handlePageChange(p)}
+      disabled={isCurrent}
+      className={clx(
+        "txt-xlarge-plus transition-all duration-200",
+        isCurrent
+          ? "text-black underline underline-offset-4 font-semibold"
+          : "text-neutral-500 hover:text-black hover:underline"
+      )}
     >
       {label}
     </button>
