@@ -27,6 +27,11 @@ const nextConfig = {
         destination: "/hr/home",
         permanent:true,
       },
+      {
+        source: "/hr/store",
+        destination: "/hr/shop",
+        permanent: true,
+      },
     ]
   },
   reactStrictMode: true,

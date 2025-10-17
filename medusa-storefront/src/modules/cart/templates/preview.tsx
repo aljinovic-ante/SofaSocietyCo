@@ -1,49 +1,68 @@
 "use client"
 
-import repeat from "@lib/util/repeat"
 import { HttpTypes } from "@medusajs/types"
-import { Table, clx } from "@medusajs/ui"
-
-import Item from "@modules/cart/components/item"
-import SkeletonLineItem from "@modules/skeletons/components/skeleton-line-item"
+import Image from "next/image"
+import Link from "next/link"
+import { convertToLocale } from "@lib/util/money"
 
 type ItemsTemplateProps = {
   cart: HttpTypes.StoreCart
 }
 
 const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
-  const items = cart.items
-  const hasOverflow = items && items.length > 4
+  const items = cart.items || []
 
   return (
-    <div
-      className={clx({
-        "pl-[1px] overflow-y-scroll overflow-x-hidden no-scrollbar max-h-[420px]":
-          hasOverflow,
-      })}
-    >
-      <Table>
-        <Table.Body data-testid="items-table">
-          {items
-            ? items
-                .sort((a, b) => {
-                  return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
-                })
-                .map((item) => {
-                  return (
-                    <Item
-                      key={item.id}
-                      item={item}
-                      type="preview"
-                      currencyCode={cart.currency_code}
-                    />
-                  )
-                })
-            : repeat(5).map((i) => {
-                return <SkeletonLineItem key={i} />
+    <div className="flex flex-col space-y-8">
+      {items.map((item) => {
+        const productHandle =
+          item.variant?.product?.handle || item.product?.handle || ""
+
+        const productUrl = productHandle
+          ? `/hr/products/${productHandle}`
+          : "#"
+
+        return (
+          <div key={item.id} className="flex items-start gap-5">
+            <Link href={productUrl} className="shrink-0">
+              {item.thumbnail && (
+                <Image
+                  src={item.thumbnail}
+                  alt={item.title}
+                  width={100}
+                  height={100}
+                  className="rounded-md bg-gray-100 object-cover hover:opacity-80 transition"
+                />
+              )}
+            </Link>
+
+            <div className="flex flex-col flex-1">
+              <Link
+                href={productUrl}
+                className="font-medium text-base hover:underline hover:text-black transition"
+              >
+                {item.title}
+              </Link>
+
+              {item.variant && (
+                <span className="text-sm text-gray-600">
+                  Variant: {item.variant.title}
+                </span>
+              )}
+              <span className="text-sm text-gray-600">
+                Quantity: {item.quantity}
+              </span>
+            </div>
+
+            <span className="text-base font-medium text-black">
+              {convertToLocale({
+                amount: item.total,
+                currency_code: cart.currency_code,
               })}
-        </Table.Body>
-      </Table>
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }

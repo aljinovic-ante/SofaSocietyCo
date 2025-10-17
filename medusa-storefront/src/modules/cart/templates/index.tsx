@@ -1,9 +1,9 @@
 "use client"
-
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import ItemsTemplate from "./items"
 import Summary from "./summary"
 import EmptyCartMessage from "../components/empty-cart-message"
-import SignInPrompt from "../components/sign-in-prompt"
 import Divider from "@modules/common/components/divider"
 import { HttpTypes } from "@medusajs/types"
 
@@ -14,6 +14,13 @@ const CartTemplate = ({
   cart: HttpTypes.StoreCart | null
   customer: HttpTypes.StoreCustomer | null
 }) => {
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!customer) {
+      router.push("/auth/login")
+    }
+  }, [customer, router])
   return (
     <div className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-8" data-testid="cart-container">
@@ -22,7 +29,6 @@ const CartTemplate = ({
             <div>
               {!customer && (
                 <div className="mb-6">
-                  <SignInPrompt />
                   <Divider />
                 </div>
               )}

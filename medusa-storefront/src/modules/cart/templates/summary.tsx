@@ -1,10 +1,12 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Button } from "@medusajs/ui"
 import CartTotals from "@modules/common/components/cart-totals"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import { retrieveCustomer } from "@lib/data/customer"
 
 type SummaryProps = {
   cart: HttpTypes.StoreCart & {
@@ -23,31 +25,44 @@ function getCheckoutStep(cart: HttpTypes.StoreCart) {
 }
 
 const Summary = ({ cart }: SummaryProps) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const step = getCheckoutStep(cart)
+
+  useEffect(() => {
+    retrieveCustomer()
+      .then((customer) => {
+        if (customer) setIsLoggedIn(true)
+      })
+      .catch(() => setIsLoggedIn(false))
+  }, [])
 
   return (
     <div className="flex flex-col gap-y-6 p-6">
       <CartTotals totals={cart} />
-
       <DiscountCode cart={cart} />
 
       <LocalizedClientLink
         href={"/checkout?step=" + step}
         data-testid="checkout-button"
       >
-        <Button className="w-full h-12 text-base font-medium bg-black text-white hover:bg-neutral-900 rounded-md shadow-sm">
+        <Button
+          onClick={() => (window.location.href = "http://localhost:8000/hr/checkout")}
+          className="w-full h-12 text-base font-medium bg-black text-white hover:bg-neutral-900 rounded-md shadow-sm"
+        >
           Proceed to checkout
         </Button>
       </LocalizedClientLink>
 
-      <div className="bg-gray-100 text-gray-700 text-sm rounded-md py-3 px-4 mt-2 text-center">
-        <span>
-          Already have an account? No worries, just{" "}
-          <a href="/account" className="underline font-medium text-black">
-            log in.
-          </a>
-        </span>
-      </div>
+      {!isLoggedIn && (
+        <div className="bg-gray-100 text-gray-700 text-sm rounded-md py-3 px-4 mt-2 text-center">
+          <span>
+            Already have an account? No worries, just{" "}
+            <a href="/account" className="underline font-medium text-black">
+              log in.
+            </a>
+          </span>
+        </div>
+      )}
     </div>
   )
 }
