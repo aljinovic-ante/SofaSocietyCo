@@ -18,7 +18,6 @@ export default function AddressSection() {
     postal_code: "",
     province: "",
     country_code: "",
-    phone: "",
   })
 
   const mutation = useAddressMutation(address?.id, {
@@ -41,7 +40,6 @@ export default function AddressSection() {
         postal_code: address.postal_code || "",
         province: address.province || "",
         country_code: address.country_code || "",
-        phone: address.phone || "",
       })
     } else {
       setForm({
@@ -51,7 +49,6 @@ export default function AddressSection() {
         postal_code: "",
         province: "",
         country_code: "",
-        phone: "",
       })
     }
     setEditing(true)
@@ -85,7 +82,6 @@ export default function AddressSection() {
               </p>
               {address.province && <p>{address.province}</p>}
               <p>{address.country_code?.toUpperCase()}</p>
-              {address.phone && <p className="text-sm text-black-500 mt-1">{address.phone}</p>}
             </div>
             <button
               onClick={startEditing}
@@ -146,13 +142,6 @@ export default function AddressSection() {
             value={form.country_code}
             onChange={handleChange}
             placeholder="Country code (e.g. hr)"
-            className="border border-black-300 rounded-md px-3 py-2"
-          />
-          <input
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            placeholder="Phone (optional)"
             className="border border-black-300 rounded-md px-3 py-2"
           />
 

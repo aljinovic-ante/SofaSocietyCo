@@ -4,6 +4,12 @@ import Link from "next/link"
 import { useState, useRef } from "react"
 import { useCustomer, useSignout } from "@/hooks/customer"
 import { useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
+
+const CartIcon = dynamic(
+  () => import("@/components/CartIcon").then((mod) => mod.CartIcon),
+  { loading: () => <></> }
+)
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -69,12 +75,8 @@ export default function Header() {
           </div>
 
           <button className="hover:opacity-70 transition">Search</button>
-          <a
-            href="http://localhost:8000/hr/cart"
-            className="hover:opacity-70 transition"
-          >
-            Cart
-          </a>
+
+          <CartIcon />
 
           {customer ? (
             <button

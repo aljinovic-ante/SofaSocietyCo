@@ -61,19 +61,21 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
       <form action={(a) => addPromotionCode(a)} className="w-full mb-5">
         {isOpen && (
           <>
-            <div className="flex w-full gap-x-2">
-              <Input
-                className="flex-1 h-12 text-base border border-black rounded-md px-4"
-                id="promotion-input"
-                name="code"
-                type="text"
-                placeholder="Discount code"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                data-testid="discount-input"
-              />
+            <div className="flex w-full gap-x-3">
+              <div className="flex-1">
+                <Input
+                  className="h-12 text-base border border-black rounded-md px-4 w-full"
+                  id="promotion-input"
+                  name="code"
+                  type="text"
+                  placeholder="Discount code"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  data-testid="discount-input"
+                />
+              </div>
               <SubmitButton
-                className={`h-12 px-6 text-base font-medium text-white rounded-md transition border-none outline-none focus:ring-0 ${
+                className={`h-12 px-8 text-base font-medium text-white rounded-md transition border-none outline-none focus:ring-0 ${
                   inputValue.trim()
                     ? "bg-black hover:bg-neutral-900"
                     : "bg-gray-300 cursor-not-allowed"

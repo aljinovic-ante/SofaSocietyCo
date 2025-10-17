@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { HttpTypes } from "@medusajs/types"
 import Image from "next/image"
 import Link from "next/link"
@@ -10,11 +11,13 @@ type ItemsTemplateProps = {
 }
 
 const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
+  const [expanded, setExpanded] = useState(false)
   const items = cart.items || []
+  const visibleItems = expanded ? items : items.slice(0, 2)
 
   return (
     <div className="flex flex-col space-y-8">
-      {items.map((item) => {
+      {visibleItems.map((item) => {
         const productHandle =
           item.variant?.product?.handle || item.product?.handle || ""
 
@@ -63,6 +66,18 @@ const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
           </div>
         )
       })}
+      {items.length > 2 && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center justify-end gap-1 text-sm text-gray-700 hover:text-black transition mt-2 w-full"
+        >
+          {expanded ? (
+            <span>Show less ▲</span>
+          ) : (
+            <span>Show all ({items.length}) ▼</span>
+          )}
+        </button>
+      )}
     </div>
   )
 }

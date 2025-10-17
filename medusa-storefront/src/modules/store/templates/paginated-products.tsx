@@ -33,6 +33,14 @@ export default async function PaginatedProducts({
     region_id: region.id,
   }
 
+  if (collectionId) {
+    queryParams.collection_id = collectionId
+  }
+
+  if (categoryId) {
+    queryParams.category_id = categoryId
+  }
+
   const {
     response: { products },
   } = await listProductsWithSort({
@@ -72,8 +80,10 @@ export default async function PaginatedProducts({
     const matchesCollection = !isCollFiltering
       ? true
       : (() => {
-          const title = p.collection?.title?.toLowerCase().replace(/-/g, " ") || ""
-          const handle = p.collection?.handle?.toLowerCase().replace(/-/g, " ") || ""
+          const title =
+            p.collection?.title?.toLowerCase().replace(/-/g, " ") || ""
+          const handle =
+            p.collection?.handle?.toLowerCase().replace(/-/g, " ") || ""
           const normalized = collFilter.replace(/-/g, " ")
           return title.includes(normalized) || handle.includes(normalized)
         })()

@@ -24,7 +24,8 @@
       "@store/*": ["src/store/*"],
       "@modules/*": ["src/modules/*"],
       "@styles/*": ["src/styles/*"],
-      "styles/*": ["src/styles/*"]
+      "styles/*": ["src/styles/*"],
+      "hooks/*": ["src/hooks/*"]
     },
 
     "plugins": [{ "name": "next" }]

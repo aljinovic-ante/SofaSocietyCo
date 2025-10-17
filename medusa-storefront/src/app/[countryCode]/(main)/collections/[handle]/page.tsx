@@ -4,8 +4,12 @@ import { Metadata } from "next"
 import { getCollectionByHandle, listCollections } from "@lib/data/collections"
 import { listRegions } from "@lib/data/regions"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
-import CollectionTemplate from "@modules/collections/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { Suspense } from "react"
+import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
+import PaginatedProducts from "@modules/store/templates/paginated-products"
+import CategoryDropdown from "@modules/collections/templates/category-dropdown"
+import RefinementList from "@modules/store/components/refinement-list"
 
 const collections = [
   {
@@ -38,8 +42,6 @@ type Props = {
   params: { handle: string; countryCode: string }
   searchParams: { page?: string; sortBy?: SortOptions; category?: string }
 }
-
-export const PRODUCT_LIMIT = 12
 
 export async function generateStaticParams() {
   const { collections } = await listCollections({ fields: "*products" })
@@ -83,25 +85,25 @@ export default async function CollectionPage({ params, searchParams }: Props) {
     (c) => c.title.replace(/\s+/g, "-").toLowerCase() === handle
   )
 
-  return (
-      <main className="text-black pb-24">
-        <section className="max-w-7xl mx-auto flex flex-col items-center px-6 md:px-12 py-5">
-          <div className="w-full overflow-hidden rounded-md">
-            <img
-                  src={localCollection?.image || "/images/homepage/image.png"}
-                  alt={localCollection?.title || medusaCollection.title}
-                  className="w-full h-auto rounded-md object-cover"
-                />
-          </div>
-        </section>
+  const currentPage = page ? parseInt(page) : 1
 
-        <section className="max-w-7xl mx-auto px-6 md:px-12 py-20 grid md:grid-cols-2 gap-12 items-center">
+  return (
+    <main className="bg-white text-black pb-24 py-20">
+      <section className="max-w-7xl mx-auto px-6 md:px-12 mb-16">
+        <div className="w-full overflow-hidden rounded-md mb-12">
+          <img
+            src={localCollection?.image || "/images/homepage/image.png"}
+            alt={localCollection?.title || medusaCollection.title}
+            className="w-full h-auto rounded-md object-cover"
+          />
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-4">
               {localCollection?.title || medusaCollection.title}
             </h1>
           </div>
-
           <div className="text-neutral-600 leading-relaxed text-lg">
             <p className="mb-4">{localCollection?.description}</p>
             <p>
@@ -112,14 +114,32 @@ export default async function CollectionPage({ params, searchParams }: Props) {
               into your living room.
             </p>
           </div>
-        </section>
+        </div>
+      </section>
 
-      <CollectionTemplate
-        collection={medusaCollection}
-        page={page}
-        countryCode={countryCode}
-        searchParams={{ category, sortBy }}
-      />
+      <section className="max-w-7xl mx-auto px-6 md:px-12">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b border-neutral-200 pb-6 mb-10">
+          <div className="flex flex-wrap items-center gap-3">
+            <CategoryDropdown />
+          </div>
+
+          <div className="w-full md:w-auto flex justify-end">
+            <RefinementList sortBy={(sortBy as SortOptions) || "created_at"} />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-12">
+          <Suspense fallback={<SkeletonProductGrid numberOfProducts={12} />}>
+            <PaginatedProducts
+              sortBy={sortBy}
+              page={currentPage}
+              countryCode={countryCode}
+              collectionId={medusaCollection.id}
+              categoryFilter={category || "all"}
+            />
+          </Suspense>
+        </div>
+      </section>
     </main>
   )
 }
