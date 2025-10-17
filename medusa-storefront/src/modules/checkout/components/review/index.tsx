@@ -1,55 +1,53 @@
 "use client"
 
-import { Heading, Text, clx } from "@medusajs/ui"
+import { Heading, Text } from "@medusajs/ui"
 
-import PaymentButton from "../payment-button"
-import { useSearchParams } from "next/navigation"
-
-const Review = ({ cart }: { cart: any }) => {
-  const searchParams = useSearchParams()
-
-  const isOpen = searchParams.get("step") === "review"
-
-  const paidByGiftcard =
-    cart?.gift_cards && cart?.gift_cards?.length > 0 && cart?.total === 0
-
-  const previousStepsCompleted =
-    cart.shipping_address &&
-    cart.shipping_methods.length > 0 &&
-    (cart.payment_collection || paidByGiftcard)
+export default function Review({
+  cart,
+  addressComplete,
+  cardComplete,
+  deliveryConfirmed,
+}: {
+  cart: any
+  addressComplete: boolean
+  cardComplete: boolean
+  deliveryConfirmed: boolean
+}) {
+  const ready = addressComplete && cardComplete && deliveryConfirmed
 
   return (
     <div className="bg-white">
-      <div className="flex flex-row items-center justify-between mb-6">
-        <Heading
-          level="h2"
-          className={clx(
-            "flex flex-row text-3xl-regular gap-x-2 items-baseline",
-            {
-              "opacity-50 pointer-events-none select-none": !isOpen,
-            }
-          )}
-        >
-          Review
-        </Heading>
+      <Heading level="h2" className="text-3xl font-semibold mb-4">
+        Review
+      </Heading>
+
+      <div className="mb-6">
+        <Text className="text-sm text-gray-700">
+          Confirm your details before placing your order:
+        </Text>
+        <ul className="list-disc pl-6 mt-3 text-sm space-y-1">
+          <li className={addressComplete ? "text-green-600" : "text-red-600"}>
+            {addressComplete ? "✔ Address completed" : "✖ Address missing"}
+          </li>
+          <li className={deliveryConfirmed ? "text-green-600" : "text-red-600"}>
+            {deliveryConfirmed ? "✔ Delivery confirmed" : "✖ Delivery missing"}
+          </li>
+          <li className={cardComplete ? "text-green-600" : "text-red-600"}>
+            {cardComplete ? "✔ Card info completed" : "✖ Card info missing"}
+          </li>
+        </ul>
       </div>
-      {isOpen && previousStepsCompleted && (
-        <>
-          <div className="flex items-start gap-x-1 w-full mb-6">
-            <div className="w-full">
-              <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                By clicking the Place Order button, you confirm that you have
-                read, understand and accept our Terms of Use, Terms of Sale and
-                Returns Policy and acknowledge that you have read Medusa
-                Store&apos;s Privacy Policy.
-              </Text>
-            </div>
-          </div>
-          <PaymentButton cart={cart} data-testid="submit-order-button" />
-        </>
-      )}
+
+      <button
+        disabled={!ready}
+        className={`w-full h-11 rounded-md text-sm font-medium transition ${
+          ready
+            ? "bg-black text-white hover:bg-neutral-900"
+            : "bg-gray-300 text-gray-600 cursor-not-allowed"
+        }`}
+      >
+        Place Order
+      </button>
     </div>
   )
 }
-
-export default Review

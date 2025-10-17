@@ -5,18 +5,21 @@ import { retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
 import CheckoutSummary from "@modules/checkout/templates/checkout-summary"
 import Addresses from "@modules/checkout/components/addresses"
-import Shipping from "@modules/checkout/components/shipping"
-import Payment from "@modules/checkout/components/payment"
-import Review from "@modules/checkout/components/review"
 import Nav from "@modules/layout/templates/nav"
 import Footer from "@modules/layout/templates/footer"
 import { notFound } from "next/navigation"
+import CardInfo from "./card-info"
+import Review from "@/modules/checkout/components/review/index"
 
 export default function Checkout() {
   const [cart, setCart] = useState<any>(null)
   const [customer, setCustomer] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [openStep, setOpenStep] = useState<number | null>(1)
+
+  const [addressComplete, setAddressComplete] = useState(false)
+  const [cardComplete, setCardComplete] = useState(false)
+  const [deliveryConfirmed, setDeliveryConfirmed] = useState(true)
 
   useEffect(() => {
     async function loadData() {
@@ -26,6 +29,9 @@ export default function Checkout() {
         const cust = await retrieveCustomer()
         setCart(c)
         setCustomer(cust)
+        if (cust?.addresses?.length > 0) {
+          setAddressComplete(true)
+        }
       } finally {
         setLoading(false)
       }
@@ -96,7 +102,11 @@ export default function Checkout() {
               </div>
               {openStep === 2 && (
                 <div className="mt-4">
-                  <Addresses cart={cart} customer={customer} />
+                  <Addresses
+                    cart={cart}
+                    customer={customer}
+                    onComplete={() => setAddressComplete(true)}
+                  />
                 </div>
               )}
             </section>
@@ -109,9 +119,22 @@ export default function Checkout() {
                 <h2 className="font-semibold text-base">3. Shipping</h2>
                 <span className="text-xl">{openStep === 3 ? "−" : "+"}</span>
               </div>
+
               {openStep === 3 && (
                 <div className="mt-4">
-                  <Shipping cart={cart} availableShippingMethods={null} />
+                  <div className="flex items-center justify-between py-4 border rounded-md px-6 bg-gray-50 opacity-70">
+                    <label className="flex items-center gap-3 text-sm cursor-not-allowed select-none">
+                      <input
+                        type="radio"
+                        name="shipping_method"
+                        checked
+                        readOnly
+                        className="accent-black"
+                      />
+                      <span>Delivery</span>
+                    </label>
+                    <span className="text-sm text-gray-500">Included</span>
+                  </div>
                 </div>
               )}
             </section>
@@ -124,9 +147,10 @@ export default function Checkout() {
                 <h2 className="font-semibold text-base">4. Payment</h2>
                 <span className="text-xl">{openStep === 4 ? "−" : "+"}</span>
               </div>
+
               {openStep === 4 && (
                 <div className="mt-4">
-                  <Payment cart={cart} availablePaymentMethods={[]} />
+                  <CardInfo onComplete={() => setCardComplete(true)} />
                 </div>
               )}
             </section>
@@ -141,15 +165,17 @@ export default function Checkout() {
               </div>
               {openStep === 5 && (
                 <div className="mt-4">
-                  <Review cart={cart} />
-                  <button className="w-full h-11 bg-black text-white rounded-md text-sm font-medium hover:bg-neutral-900 transition mt-6">
-                    Place an order
-                  </button>
+                  <Review
+                    cart={cart}
+                    addressComplete={addressComplete}
+                    cardComplete={cardComplete}
+                    deliveryConfirmed={deliveryConfirmed}
+                  />
                 </div>
               )}
             </section>
           </div>
-          
+
           <div className="bg-[#f8f8f8] rounded-lg px-8 py-10 h-fit">
             <CheckoutSummary cart={cart} />
           </div>

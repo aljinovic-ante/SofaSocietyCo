@@ -10,9 +10,10 @@ import Divider from "@modules/common/components/divider"
 type AddressesProps = {
   cart: any
   customer: any
+  onComplete?: () => void
 }
 
-export default function Addresses({ cart, customer }: AddressesProps) {
+export default function Addresses({ cart, customer, onComplete }: AddressesProps) {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { data: customerData, isLoading } = useCustomer()
@@ -41,6 +42,7 @@ export default function Addresses({ cart, customer }: AddressesProps) {
         country_code: address.country_code || "hr",
         phone: address.phone || "",
       })
+      if (onComplete) onComplete()
     }
   }, [address])
 
@@ -48,6 +50,7 @@ export default function Addresses({ cart, customer }: AddressesProps) {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["customer"] })
       router.refresh()
+      if (onComplete) onComplete()
     },
   })
 
