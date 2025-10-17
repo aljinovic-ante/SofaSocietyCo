@@ -2,7 +2,7 @@
 import PersonalInfoSection from "@/components/PersonalInfoSection"
 import AddressSection from "@/components/AddressSection"
 import ChangePasswordSection from "@/components/ChangePass"
-import { getCustomer,signout } from "@/lib/data/customer"
+import { retrieveCustomer,signout } from "@/lib/data/customer"
 import { useRouter } from "next/navigation"
 
 export default function AccountPage() {

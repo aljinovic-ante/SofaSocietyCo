@@ -11,43 +11,32 @@ type ItemsTemplateProps = {
 
 const ItemsTemplate = ({ cart }: ItemsTemplateProps) => {
   const items = cart?.items
+
   return (
-    <div>
-      <div className="pb-3 flex items-center">
-        <Heading className="text-[2rem] leading-[2.75rem]">Cart</Heading>
+    <div className="bg-white">
+      <div className="pb-8">
+        <Heading className="text-4xl font-semibold leading-tight ml-6">
+          Your shopping cart
+        </Heading>
+        <div className="border-b-2 border-gray-300 mt-3 ml-6 mr-6 py-3" />
       </div>
-      <Table>
-        <Table.Header className="border-t-0">
-          <Table.Row className="text-ui-fg-subtle txt-medium-plus">
-            <Table.HeaderCell className="!pl-0">Item</Table.HeaderCell>
-            <Table.HeaderCell></Table.HeaderCell>
-            <Table.HeaderCell>Quantity</Table.HeaderCell>
-            <Table.HeaderCell className="hidden small:table-cell">
-              Price
-            </Table.HeaderCell>
-            <Table.HeaderCell className="!pr-0 text-right">
-              Total
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
+
+      <Table className="w-full border-separate border-spacing-y-1">
+        <Table.Header className="hidden" /> 
         <Table.Body>
           {items
             ? items
                 .sort((a, b) => {
                   return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
                 })
-                .map((item) => {
-                  return (
-                    <Item
-                      key={item.id}
-                      item={item}
-                      currencyCode={cart?.currency_code}
-                    />
-                  )
-                })
-            : repeat(5).map((i) => {
-                return <SkeletonLineItem key={i} />
-              })}
+                .map((item) => (
+                  <Item
+                    key={item.id}
+                    item={item}
+                    currencyCode={cart?.currency_code}
+                  />
+                ))
+            : repeat(3).map((i) => <SkeletonLineItem key={i} />)}
         </Table.Body>
       </Table>
     </div>

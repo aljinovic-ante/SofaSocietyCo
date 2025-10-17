@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-query"
 import { z } from "zod"
 import {
-  getCustomer,
+  retrieveCustomer,
   signup,
   login,
   signout,
@@ -22,7 +22,7 @@ export const useCustomer = () => {
   return useQuery({
     queryKey: ["customer"],
     queryFn: async () => {
-      const customer = await getCustomer()
+      const customer = await retrieveCustomer()
       return customer
     },
     staleTime: 600 * 1000,

@@ -36,23 +36,33 @@ export default function HomePage() {
       <section className="py-5 px-6 md:px-12 max-w-6xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-semibold mb-10">Our products</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="flex flex-col items-center">
-            <img
-              src="/images/homepage/image (1).png"
-              alt="Sofas"
-              className="h-[400px] w-full object-cover rounded-lg"
-            />
+          <a
+            href="http://localhost:8000/hr/shop?category=two-seater"
+            className="flex flex-col items-center group"
+          >
+            <div className="overflow-hidden rounded-lg w-full">
+              <img
+                src="/images/homepage/image (1).png"
+                alt="Sofas"
+                className="h-[400px] w-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-110"
+              />
+            </div>
             <p className="mt-4 text-sm font-medium">Sofas</p>
-          </div>
+          </a>
 
-          <div className="flex flex-col items-center">
-            <img
-              src="/images/homepage/image (2).png"
-              alt="Arm Chairs"
-              className="h-[400px] w-full object-cover rounded-lg"
-            />
+          <a
+            href="http://localhost:8000/hr/shop?category=one-seater"
+            className="flex flex-col items-center group"
+          >
+            <div className="overflow-hidden rounded-lg w-full">
+              <img
+                src="/images/homepage/image (2).png"
+                alt="Arm Chairs"
+                className="h-[400px] w-full object-cover rounded-lg transition-transform duration-500 group-hover:scale-110"
+              />
+            </div>
             <p className="mt-4 text-sm font-medium">Arm Chairs</p>
-          </div>
+          </a>
         </div>
       </section>
 

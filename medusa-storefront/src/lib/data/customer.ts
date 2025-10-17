@@ -18,7 +18,7 @@ import {
   updateCustomerFormSchema,
 } from "@/hooks/customer"
 
-export const getCustomer = async function () {
+export const retrieveCustomer = async function () {
   return await sdk.client
     .fetch<{ customer: HttpTypes.StoreCustomer }>(`/store/customers/me`, {
       next: { tags: ["customer"] },

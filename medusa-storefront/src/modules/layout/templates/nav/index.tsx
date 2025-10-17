@@ -69,7 +69,12 @@ export default function Header() {
           </div>
 
           <button className="hover:opacity-70 transition">Search</button>
-          <button className="hover:opacity-70 transition">Cart</button>
+          <a
+            href="http://localhost:8000/hr/cart"
+            className="hover:opacity-70 transition"
+          >
+            Cart
+          </a>
 
           {customer ? (
             <button

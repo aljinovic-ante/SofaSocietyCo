@@ -7,16 +7,21 @@ import CollectionInspired from "./collection-inspired"
 import { getProductPrice } from "@/lib/util/get-product-price"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-
-// const countryCode = pathname.split("/")[1] || "hr"
-
+import { retrieveCustomer } from "@lib/data/customer"
+import { addToCart } from "@lib/data/cart"
 
 export default function ProductClient({ product }: { product: any }) {
   const [selectedMaterial, setSelectedMaterial] = useState("")
   const [selectedColor, setSelectedColor] = useState("")
   const [quantity, setQuantity] = useState(1)
   const [currentImage, setCurrentImage] = useState(0)
+  const [customer, setCustomer] = useState<any>(null)
+  const [showLoginWarning, setShowLoginWarning] = useState(false)
   const pathname = usePathname()
+
+  useEffect(() => {
+    retrieveCustomer().then(setCustomer).catch(() => setCustomer(null))
+  }, [])
 
   const images = product?.images?.length
     ? product.images.map((i: any) => i.url)
@@ -34,7 +39,6 @@ export default function ProductClient({ product }: { product: any }) {
 
   const availableColors = useMemo(() => {
     if (!selectedMaterial) return []
-
     const variantsForMaterial = product.variants?.filter((variant: any) =>
       variant.options?.some(
         (opt: any) =>
@@ -87,9 +91,36 @@ export default function ProductClient({ product }: { product: any }) {
   const displayedPrice =
     variantPrice?.calculated_price ||
     cheapestPrice?.calculated_price ||
-    "Price depends on variant typ"
+    "Price depends on variant type"
 
   const canAddToCart = Boolean(selectedVariant)
+
+  const [isAdding, setIsAdding] = useState(false)
+
+  const handleAddToCart = async () => {
+      if (!customer) {
+        setShowLoginWarning(true)
+        return
+      }
+      if (!selectedVariant) return
+      setShowLoginWarning(false)
+      setIsAdding(true)
+
+      const countryCode = pathname.split("/")[1] || "hr"
+      try {
+        await addToCart({
+          variantId: selectedVariant.id,
+          quantity,
+          countryCode,
+        })
+        alert("Item added to cart!")
+      } catch (error) {
+        console.error(error)
+        alert("Error adding item to cart.")
+      } finally {
+        setIsAdding(false)
+      }
+  }
 
   return (
     <main className="max-w-7xl mx-auto px-8 py-20 grid grid-cols-1 md:grid-cols-2 gap-16 text-black">
@@ -119,9 +150,7 @@ export default function ProductClient({ product }: { product: any }) {
         </p>
 
         <h1 className="text-4xl font-semibold">{product.title}</h1>
-
         <p className="text-xl font-medium">{displayedPrice}</p>
-
         <p className="leading-relaxed">
           {typeof product.description === "string" ? product.description : ""}
         </p>
@@ -175,17 +204,24 @@ export default function ProductClient({ product }: { product: any }) {
 
         <div className="flex items-center gap-4">
           <button
-            disabled={!canAddToCart}
+            disabled={!canAddToCart || isAdding}
+            onClick={handleAddToCart}
             className={`px-8 py-3 rounded-md transition ${
               canAddToCart
                 ? "bg-black text-white hover:bg-neutral-900"
                 : "bg-neutral-400 text-white opacity-70"
             }`}
           >
-            Add to cart
+            {isAdding ? "Adding..." : "Add to cart"}
           </button>
+          {showLoginWarning && (
+            <p className="text-sm text-red-600 font-semibold">
+              Log in to add items to your cart
+            </p>
+          )}
         </div>
       </div>
+
       <CollectionInspired
         currentProductId={product.id}
         collectionId={product.collection?.title}

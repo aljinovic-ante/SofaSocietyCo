@@ -1,9 +1,7 @@
 "use client"
 
-import { Button, Heading } from "@medusajs/ui"
-
+import { Button } from "@medusajs/ui"
 import CartTotals from "@modules/common/components/cart-totals"
-import Divider from "@modules/common/components/divider"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
@@ -28,19 +26,28 @@ const Summary = ({ cart }: SummaryProps) => {
   const step = getCheckoutStep(cart)
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <Heading level="h2" className="text-[2rem] leading-[2.75rem]">
-        Summary
-      </Heading>
-      <DiscountCode cart={cart} />
-      <Divider />
+    <div className="flex flex-col gap-y-6 p-6">
       <CartTotals totals={cart} />
+
+      <DiscountCode cart={cart} />
+
       <LocalizedClientLink
         href={"/checkout?step=" + step}
         data-testid="checkout-button"
       >
-        <Button className="w-full h-10">Go to checkout</Button>
+        <Button className="w-full h-12 text-base font-medium bg-black text-white hover:bg-neutral-900 rounded-md shadow-sm">
+          Proceed to checkout
+        </Button>
       </LocalizedClientLink>
+
+      <div className="bg-gray-100 text-gray-700 text-sm rounded-md py-3 px-4 mt-2 text-center">
+        <span>
+          Already have an account? No worries, just{" "}
+          <a href="/account" className="underline font-medium text-black">
+            log in.
+          </a>
+        </span>
+      </div>
     </div>
   )
 }
