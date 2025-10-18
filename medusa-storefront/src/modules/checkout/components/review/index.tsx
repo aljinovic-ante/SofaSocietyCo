@@ -1,8 +1,7 @@
-"use client"
-
 import { Heading, Text } from "@medusajs/ui"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { placeOrder } from "@/lib/data/cart"
 
 export default function Review({
   cart,
@@ -30,19 +29,22 @@ export default function Review({
   }, [addressComplete, deliveryConfirmed, finalCardComplete])
 
   const handlePlaceOrder = async () => {
+    if (!ready || loading) return
+
+    setLoading(true)
+    setError(null)
+
     try {
-      setLoading(true)
-      setError(null)
-      const res = await fetch(`/api/orders/place`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cart_id: cart.id }),
-      })
-      if (!res.ok) throw new Error("Failed to place order.")
-      const data = await res.json()
-      router.push(`/order/confirmed/${data.order.id}`)
-    } catch (err: any) {
-      setError(err.message)
+      const orderData = await placeOrder(cart.id)
+
+      if (orderData) {
+        const countryCode = orderData.order.shipping_address?.country_code?.toLowerCase()
+        router.push(`/${countryCode}/order/${orderData.order.id}/confirmed`)
+      } else {
+        throw new Error("Order creation failed")
+      }
+    } catch (err) {
+      setError("An error occurred while placing the order.")
     } finally {
       setLoading(false)
     }

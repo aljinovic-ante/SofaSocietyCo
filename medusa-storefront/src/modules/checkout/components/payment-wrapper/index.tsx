@@ -1,41 +1,45 @@
 "use client"
 
 import { loadStripe } from "@stripe/stripe-js"
-import React from "react"
-import StripeWrapper from "./stripe-wrapper"
-import { HttpTypes } from "@medusajs/types"
-import { isStripe } from "@lib/constants"
+import * as React from "react"
+import StripeWrapper from "@modules/checkout/components/payment-wrapper/stripe-wrapper"
+import { createContext } from "react"
+import { isPaypal, isStripe } from "@lib/constants"
+import { withReactQueryProvider } from "@/lib/util/react-query"
+import { StoreCart } from "@medusajs/types"
 
-type PaymentWrapperProps = {
-  cart: HttpTypes.StoreCart
+type WrapperProps = {
   children: React.ReactNode
+  cart: StoreCart
 }
+
+export const StripeContext = createContext(false)
 
 const stripeKey = process.env.NEXT_PUBLIC_STRIPE_KEY
 const stripePromise = stripeKey ? loadStripe(stripeKey) : null
 
-const PaymentWrapper: React.FC<PaymentWrapperProps> = ({ cart, children }) => {
+const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
+
+const Wrapper: React.FC<WrapperProps> = ({ children, cart }) => {
   const paymentSession = cart.payment_collection?.payment_sessions?.find(
     (s) => s.status === "pending"
   )
 
-  if (
-    isStripe(paymentSession?.provider_id) &&
-    paymentSession &&
-    stripePromise
-  ) {
+  if (isStripe(paymentSession?.provider_id) && paymentSession && stripePromise) {
     return (
-      <StripeWrapper
-        paymentSession={paymentSession}
-        stripeKey={stripeKey}
-        stripePromise={stripePromise}
-      >
-        {children}
-      </StripeWrapper>
+      <StripeContext.Provider value={true}>
+        <StripeWrapper
+          paymentSession={paymentSession}
+          stripeKey={stripeKey}
+          stripePromise={stripePromise}
+        >
+          {children}
+        </StripeWrapper>
+      </StripeContext.Provider>
     )
   }
 
   return <div>{children}</div>
 }
 
-export default PaymentWrapper
+export default withReactQueryProvider(Wrapper)

@@ -7,9 +7,9 @@ import CheckoutSummary from "@modules/checkout/templates/checkout-summary"
 import Addresses from "@modules/checkout/components/addresses"
 import Nav from "@modules/layout/templates/nav"
 import Footer from "@modules/layout/templates/footer"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import Review from "@/modules/checkout/components/review"
-import Shipping from "@/modules/checkout/components/shipping"
+import Shipping from "@modules/checkout/components/shipping"
 import Payment from "@modules/checkout/components/payment"
 
 export default function Checkout() {
@@ -26,7 +26,10 @@ export default function Checkout() {
     async function loadData() {
       try {
         const c = await retrieveCart()
-        if (!c) return notFound()
+        if (!c || c.items.length === 0) {
+          redirect("/shop")
+          return
+        }
         const cust = await retrieveCustomer()
         setCart(c)
         setCustomer(cust)
@@ -53,7 +56,7 @@ export default function Checkout() {
     setOpenStep((prev) => (prev === index ? null : index))
   }
 
-  console.log("REGION: ",cart.region_id, cart.shipping_address)
+  console.log("REGION: ", cart.region_id, cart.shipping_address)
 
   return (
     <>
