@@ -1,7 +1,7 @@
 "use client"
 
 import { Heading, Text } from "@medusajs/ui"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 export default function Review({
@@ -15,10 +15,19 @@ export default function Review({
   cardComplete: boolean
   deliveryConfirmed: boolean
 }) {
-  const ready = addressComplete && cardComplete && deliveryConfirmed
-  const router = useRouter()
+  const [ready, setReady] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+
+  const finalCardComplete =
+    cardComplete || cart?.payment_collection?.payment_sessions?.some(
+      (s: any) => s.provider_id === "pp_system_default"
+    )
+
+  useEffect(() => {
+    setReady(addressComplete && deliveryConfirmed && finalCardComplete)
+  }, [addressComplete, deliveryConfirmed, finalCardComplete])
 
   const handlePlaceOrder = async () => {
     try {
@@ -56,8 +65,10 @@ export default function Review({
           <li className={deliveryConfirmed ? "text-green-600" : "text-red-600"}>
             {deliveryConfirmed ? "✔ Delivery confirmed" : "✖ Delivery missing"}
           </li>
-          <li className={cardComplete ? "text-green-600" : "text-red-600"}>
-            {cardComplete ? "✔ Card info completed" : "✖ Card info missing"}
+          <li className={finalCardComplete ? "text-green-600" : "text-red-600"}>
+            {finalCardComplete
+              ? "✔ Payment confirmed (Cash on Delivery)"
+              : "✖ Payment missing"}
           </li>
         </ul>
       </div>

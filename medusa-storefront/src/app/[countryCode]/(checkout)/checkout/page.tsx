@@ -8,8 +8,9 @@ import Addresses from "@modules/checkout/components/addresses"
 import Nav from "@modules/layout/templates/nav"
 import Footer from "@modules/layout/templates/footer"
 import { notFound } from "next/navigation"
-import CardInfo from "./card-info"
-import Review from "@/modules/checkout/components/review/index"
+import Review from "@/modules/checkout/components/review"
+import Shipping from "@/modules/checkout/components/shipping"
+import Payment from "@modules/checkout/components/payment"
 
 export default function Checkout() {
   const [cart, setCart] = useState<any>(null)
@@ -18,7 +19,7 @@ export default function Checkout() {
   const [openStep, setOpenStep] = useState<number | null>(1)
 
   const [addressComplete, setAddressComplete] = useState(false)
-  const [cardComplete, setCardComplete] = useState(false)
+  const [cardComplete, setCardComplete] = useState(true)
   const [deliveryConfirmed, setDeliveryConfirmed] = useState(true)
 
   useEffect(() => {
@@ -51,6 +52,8 @@ export default function Checkout() {
   const toggleStep = (index: number) => {
     setOpenStep((prev) => (prev === index ? null : index))
   }
+
+  console.log("REGION: ",cart.region_id, cart.shipping_address)
 
   return (
     <>
@@ -119,22 +122,9 @@ export default function Checkout() {
                 <h2 className="font-semibold text-base">3. Shipping</h2>
                 <span className="text-xl">{openStep === 3 ? "−" : "+"}</span>
               </div>
-
               {openStep === 3 && (
                 <div className="mt-4">
-                  <div className="flex items-center justify-between py-4 border rounded-md px-6 bg-gray-50 opacity-70">
-                    <label className="flex items-center gap-3 text-sm cursor-not-allowed select-none">
-                      <input
-                        type="radio"
-                        name="shipping_method"
-                        checked
-                        readOnly
-                        className="accent-black"
-                      />
-                      <span>Delivery</span>
-                    </label>
-                    <span className="text-sm text-gray-500">Included</span>
-                  </div>
+                  <Shipping cart={cart} onCartUpdate={setCart} />
                 </div>
               )}
             </section>
@@ -150,7 +140,7 @@ export default function Checkout() {
 
               {openStep === 4 && (
                 <div className="mt-4">
-                  <CardInfo onComplete={() => setCardComplete(true)} />
+                  <Payment cart={cart} />
                 </div>
               )}
             </section>
