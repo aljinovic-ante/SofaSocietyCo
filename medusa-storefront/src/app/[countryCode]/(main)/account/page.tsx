@@ -18,11 +18,15 @@ export default function AccountPage() {
   useEffect(() => {
     const loadCustomer = async () => {
       const c = await retrieveCustomer()
-      setCustomer(c)
+      if (!c) {
+        router.push("/auth/login")
+      } else {
+        setCustomer(c)
+      }
     }
     loadCustomer()
-  }, [])
-
+  }, [router])
+  
   const handleLogout = async () => {
     await signout("hr")
     router.push("/auth/login")

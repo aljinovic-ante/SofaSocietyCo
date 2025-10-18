@@ -8173,6 +8173,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.90.5":
+  version: 5.90.5
+  resolution: "@tanstack/query-core@npm:5.90.5"
+  checksum: 10c0/3b9460cc10d494357a30ddd3138f2a831611d14b5b8ce3587daa17a078d63945fcdf419864d9dc8e1249aa89b512003d2f134977c64ceccdbdfdd79f1f7e0a34
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-query@npm:5.64.2":
   version: 5.64.2
   resolution: "@tanstack/react-query@npm:5.64.2"
@@ -8181,6 +8188,17 @@ __metadata:
   peerDependencies:
     react: ^18 || ^19
   checksum: 10c0/4e81c8e922ced8ef5f2e5975d7784409b532ce007b1771fe8569e380d08666b5323a90fa91de6ef10f9f2f8882d3fdf1be109eeb99a54bd84b1fa2075de9e75b
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.90.5":
+  version: 5.90.5
+  resolution: "@tanstack/react-query@npm:5.90.5"
+  dependencies:
+    "@tanstack/query-core": "npm:5.90.5"
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 10c0/b2450259e40afc2aec5e455414f204c511ec98ebbbd25963316ab72b25758722ee424ed51210bd6863f78f03ae414e18571879f9d70a022e11049f3f04ef5ce2
   languageName: node
   linkType: hard
 
@@ -12986,6 +13004,7 @@ __metadata:
     "@mikro-orm/postgresql": "npm:6.4.3"
     "@swc/core": "npm:1.5.7"
     "@swc/jest": "npm:^0.2.36"
+    "@tanstack/react-query": "npm:^5.90.5"
     "@types/babel__generator": "npm:^7.27.0"
     "@types/babel__traverse": "npm:^7.28.0"
     "@types/body-parser": "npm:^1.19.6"

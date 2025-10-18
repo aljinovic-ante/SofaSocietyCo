@@ -1,3 +1,4 @@
+"use client"
 import { Heading, Text } from "@medusajs/ui"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -5,11 +6,15 @@ import { placeOrder } from "@/lib/data/cart"
 
 export default function Review({
   cart,
+  email,
+  customer,
   addressComplete,
   cardComplete,
   deliveryConfirmed,
 }: {
   cart: any
+  email: string
+  customer: any
   addressComplete: boolean
   cardComplete: boolean
   deliveryConfirmed: boolean
@@ -25,8 +30,13 @@ export default function Review({
     )
 
   useEffect(() => {
-    setReady(addressComplete && deliveryConfirmed && finalCardComplete)
-  }, [addressComplete, deliveryConfirmed, finalCardComplete])
+    setReady(
+      addressComplete &&
+      deliveryConfirmed &&
+      finalCardComplete &&
+      /\S+@\S+\.\S+/.test(email)
+    )
+  }, [addressComplete, deliveryConfirmed, finalCardComplete, email])
 
   const handlePlaceOrder = async () => {
     if (!ready || loading) return
@@ -72,7 +82,19 @@ export default function Review({
               ? "✔ Payment confirmed"
               : "✖ Payment missing"}
           </li>
+          <li className={/\S+@\S+\.\S+/.test(email) ? "text-green-600" : "text-red-600"}>
+            {/\S+@\S+\.\S+/.test(email) ? "✔ Email valid" : "✖ Email invalid"}
+          </li>
         </ul>
+
+        {customer?.addresses?.[0] && (
+          <div className="mt-4">
+            <h3 className="font-semibold">Shipping Address</h3>
+            <p>{customer?.addresses[0]?.line1}</p>
+            <p>{customer?.addresses[0]?.city}</p>
+            <p>{customer?.addresses[0]?.country}</p>
+          </div>
+        )}
       </div>
 
       {error && <p className="text-red-600 text-sm mb-3">{error}</p>}

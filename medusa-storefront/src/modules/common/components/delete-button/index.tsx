@@ -22,11 +22,12 @@ const DeleteButton = ({
     setIsDeleting(true)
     try {
       await deleteLineItem(id)
-      router.refresh() // refreshes cart and totals
+      router.refresh()
+      window.location.reload()
     } catch (err) {
       console.error("Error deleting item:", err)
     } finally {
-      setIsDeleting(false) // stops spinner always
+      setIsDeleting(false)
     }
   }
 

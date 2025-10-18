@@ -13,4 +13,5 @@ export const COLORS: Record<string, string> = {
   "Violet": "#EE82EE",
   "Beige Yellow": "#F5DEB3",
   "Gray": "#808080",
+  "White": "#ffffff",
 }

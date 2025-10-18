@@ -20,7 +20,7 @@ export default function Shipping({
   const [selected, setSelected] = useState<string | null>(
     cart.shipping_methods?.[0]?.shipping_option_id || null
   )
-
+  const [shippingSelected, setShippingSelected] = useState(false)
   const searchParams = useSearchParams()
   const isOpen = searchParams.get("step") === "shipping"
 
@@ -31,6 +31,7 @@ export default function Shipping({
   const handleSelect = (id: string) => {
     setError(null)
     setSelected(id)
+    setShippingSelected(true)
     mutate(
       { shippingMethodId: id },
       {
@@ -53,7 +54,10 @@ export default function Shipping({
     )
   }
 
-  useEffect(() => setError(null), [isOpen])
+  useEffect(() => {
+    setError(null)
+    setShippingSelected(false)
+  }, [isOpen])
 
   if (!availableShippingMethods?.length) {
     return (
@@ -97,6 +101,10 @@ export default function Shipping({
 
       <ErrorMessage error={error} />
       {isPending && <p className="text-sm text-gray-500">Updating...</p>}
+
+      {!shippingSelected && (
+        <p className="text-red-600 mt-2 text-sm">Please select a shipping method.</p>
+      )}
     </div>
   )
 }

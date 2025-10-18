@@ -155,7 +155,7 @@ export default async function OrderCompletedTemplate({
                 </div>
 
                 <p className="absolute bottom-0 right-0 text-xl font-semibold mb-1 mr-1">
-                  €{(item.unit_price).toFixed(2)}
+                  €{(item.unit_price * item.quantity).toFixed(2)}
                 </p>
               </div>
             )

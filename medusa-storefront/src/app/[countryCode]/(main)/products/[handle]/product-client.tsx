@@ -120,6 +120,7 @@ export default function ProductClient({ product }: { product: any }) {
         countryCode,
       })
       setFeedbackMessage({ text: "Item added to cart!", type: "success" })
+      window.location.reload()
     } catch (error) {
       console.error(error)
       setFeedbackMessage({ text: "Error adding item to cart.", type: "error" })

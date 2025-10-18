@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect } from "react"
 import { retrieveCart } from "@lib/data/cart"
 import { retrieveCustomer } from "@lib/data/customer"
@@ -17,10 +16,11 @@ export default function Checkout() {
   const [customer, setCustomer] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [openStep, setOpenStep] = useState<number | null>(1)
+  const [email, setEmail] = useState<string>("")
 
   const [addressComplete, setAddressComplete] = useState(false)
-  const [cardComplete, setCardComplete] = useState(true)
-  const [deliveryConfirmed, setDeliveryConfirmed] = useState(true)
+  const [cardComplete, setCardComplete] = useState(false)
+  const [deliveryConfirmed, setDeliveryConfirmed] = useState(false)
 
   useEffect(() => {
     async function loadData() {
@@ -36,6 +36,7 @@ export default function Checkout() {
         if (cust?.addresses?.length > 0) {
           setAddressComplete(true)
         }
+        setEmail(cust?.email || "")
       } finally {
         setLoading(false)
       }
@@ -56,7 +57,7 @@ export default function Checkout() {
     setOpenStep((prev) => (prev === index ? null : index))
   }
 
-  console.log("REGION: ", cart.region_id, cart.shipping_address)
+  const isEmailValid = (email: string) => /\S+@\S+\.\S+/.test(email)
 
   return (
     <>
@@ -64,9 +65,7 @@ export default function Checkout() {
       <div className="min-h-screen w-full bg-white text-black py-20">
         <div className="max-w-7xl mx-auto grid grid-cols-2 gap-0 py-16">
           <div className="flex flex-col gap-10 px-8">
-            <h1 className="text-4xl font-semibold mb-2 tracking-tight">
-              Checkout
-            </h1>
+            <h1 className="text-4xl font-semibold mb-2 tracking-tight">Checkout</h1>
 
             <section>
               <div
@@ -81,7 +80,8 @@ export default function Checkout() {
                   <input
                     type="email"
                     placeholder="Email"
-                    defaultValue={customer?.email ?? ""}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-black"
                   />
                   <div className="flex items-center space-x-2 text-sm text-gray-500">
@@ -91,7 +91,10 @@ export default function Checkout() {
                       But only if you subscribe.
                     </p>
                   </div>
-                  <button className="w-28 h-10 bg-black text-white rounded-md text-sm font-medium hover:bg-neutral-900 transition">
+                  <button
+                    className="w-28 h-10 bg-black text-white rounded-md text-sm font-medium hover:bg-neutral-900 transition"
+                    disabled={!isEmailValid(email)}
+                  >
                     Next
                   </button>
                 </div>
@@ -127,7 +130,17 @@ export default function Checkout() {
               </div>
               {openStep === 3 && (
                 <div className="mt-4">
-                  <Shipping cart={cart} onCartUpdate={setCart} />
+                  <Shipping cart={cart}
+                    onCartUpdate={(updatedCart) => {
+                      setCart(updatedCart)
+                      const shippingMethods = updatedCart.shipping_methods ?? []
+                      if (shippingMethods.length > 0) {
+                        setDeliveryConfirmed(true)
+                      } else {
+                        setDeliveryConfirmed(false)
+                      }
+                    }}
+                  />
                 </div>
               )}
             </section>
@@ -143,7 +156,10 @@ export default function Checkout() {
 
               {openStep === 4 && (
                 <div className="mt-4">
-                  <Payment cart={cart} />
+                  <Payment
+                    cart={cart}
+                    onCardComplete={(complete) => setCardComplete(complete)}
+                  />
                 </div>
               )}
             </section>
@@ -160,6 +176,8 @@ export default function Checkout() {
                 <div className="mt-4">
                   <Review
                     cart={cart}
+                    email={email}
+                    customer={customer}
                     addressComplete={addressComplete}
                     cardComplete={cardComplete}
                     deliveryConfirmed={deliveryConfirmed}

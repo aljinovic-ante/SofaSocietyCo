@@ -1,12 +1,10 @@
-"use client"
-
-import { useState, useEffect, useCallback, useMemo } from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { Button, Text } from "@medusajs/ui"
 import { CardElement } from "@stripe/react-stripe-js"
 import { StripeCardElementOptions } from "@stripe/stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { twJoin } from "tailwind-merge"
 import { initiatePaymentSession } from "@lib/data/cart"
 import Divider from "@/modules/common/components/divider"
@@ -14,9 +12,12 @@ import ErrorMessage from "../error-message"
 
 const stripePromise = loadStripe("pk_test_51SJZ6dJE2acDtbYPqENkqm7erGcHCrqTwCGiPid4Uh0YG3oJhRrCvuNS4DEV1pynr9RQlzPjZkmqErgdTUtn4aj200RMFSfpDR")
 
-console.log("Stripe Initialized with Public Key:", process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+export type PaymentProps = {
+  cart: any
+  onCardComplete: (complete: boolean) => void
+}
 
-export default function Payment({ cart }: { cart: any }) {
+export default function Payment({ cart, onCardComplete }: PaymentProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [cardBrand, setCardBrand] = useState<string | null>(null)
@@ -86,6 +87,8 @@ export default function Payment({ cart }: { cart: any }) {
     setCardBrand(e.brand && e.brand.charAt(0).toUpperCase() + e.brand.slice(1))
     setError(e.error?.message || null)
     setCardComplete(e.complete)
+
+    onCardComplete(e.complete)
   }
 
   const paymentReady = cart?.shipping_methods?.length > 0

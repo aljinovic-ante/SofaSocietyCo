@@ -29,7 +29,10 @@ const Item = ({ item, currencyCode }: ItemProps) => {
     setQuantity(newQuantity)
     await updateLineItem({ lineId: item.id, quantity: newQuantity })
       .catch((err) => setError(err.message))
-      .finally(() => setUpdating(false))
+      .finally(() => {
+        setUpdating(false)
+        window.location.reload()
+      })
   }
 
   const maxQtyFromInventory = 10
