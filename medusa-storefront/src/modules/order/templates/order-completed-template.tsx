@@ -155,7 +155,7 @@ export default async function OrderCompletedTemplate({
                 </div>
 
                 <p className="absolute bottom-0 right-0 text-xl font-semibold mb-1 mr-1">
-                  €{(item.unit_price / 100).toFixed(2)}
+                  €{(item.unit_price).toFixed(2)}
                 </p>
               </div>
             )
@@ -171,22 +171,22 @@ export default async function OrderCompletedTemplate({
           <div className="flex flex-col items-end text-right sm:mt-0 mt-6">
             <div className="flex justify-between w-56">
               <p className="text-grayscale-500">Subtotal</p>
-              <p className="font-semibold">€{(order.subtotal / 100).toFixed(2)}</p>
+              <p className="font-semibold">€{(order.subtotal).toFixed(2)}</p>
             </div>
             <div className="flex justify-between w-56">
               <p className="text-grayscale-500">Shipping</p>
-              <p className="font-semibold">€{(order.shipping_total / 100).toFixed(2)}</p>
+              <p className="font-semibold">€{(order.shipping_total).toFixed(2)}</p>
             </div>
             <div className="flex justify-between w-56">
               <p className="text-grayscale-500">Taxes</p>
-              <p className="font-semibold">€{(order.tax_total / 100).toFixed(2)}</p>
+              <p className="font-semibold">€{(order.tax_total).toFixed(2)}</p>
             </div>
             <div className="flex justify-between w-56 mt-2">
               <p className="font-semibold text-lg">Total</p>
-              <p className="font-semibold text-lg">€{(order.total / 100).toFixed(2)}</p>
+              <p className="font-semibold text-lg">€{(order.total).toFixed(2)}</p>
             </div>
             <p className="text-xs text-grayscale-500 mt-1">
-              Including {(order.tax_total / 100).toFixed(2)} tax
+              Including {(order.tax_total).toFixed(2)} tax
             </p>
           </div>
         </div>

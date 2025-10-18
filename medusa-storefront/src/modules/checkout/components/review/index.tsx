@@ -69,7 +69,7 @@ export default function Review({
           </li>
           <li className={finalCardComplete ? "text-green-600" : "text-red-600"}>
             {finalCardComplete
-              ? "✔ Payment confirmed (Cash on Delivery)"
+              ? "✔ Payment confirmed"
               : "✖ Payment missing"}
           </li>
         </ul>

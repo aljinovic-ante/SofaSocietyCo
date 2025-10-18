@@ -6,7 +6,7 @@ import PersonalInfoSection from "@/components/PersonalInfoSection"
 import AddressSection from "@/components/AddressSection"
 import ChangePasswordSection from "@/components/ChangePass"
 import { retrieveCustomer, signout } from "@/lib/data/customer"
-import { listOrders } from "@/lib/data/orders"
+import { listOrdersAcc } from "@/lib/data/orders"
 
 export default function AccountPage() {
   const router = useRouter()
@@ -31,8 +31,11 @@ export default function AccountPage() {
   const loadOrders = async () => {
     setLoadingOrders(true)
     try {
-      const data = await listOrders()
-      setOrders(data)
+      const data = await listOrdersAcc()
+      console.log("Fetched orders:", data)
+      setOrders(data || [])
+    } catch (err) {
+      console.error('Failed to load orders:', err)
     } finally {
       setLoadingOrders(false)
     }
@@ -105,19 +108,44 @@ export default function AccountPage() {
                     key={order.id}
                     className="border border-gray-200 rounded-lg p-6 flex justify-between items-center"
                   >
-                    <div>
-                      <p className="font-medium text-sm">Order #{order.display_id}</p>
+                    <div className="flex flex-col w-full">
+                      <a
+                        href={`http://localhost:8000/hr/order/${order.id}/confirmed`}
+                        className="font-medium text-sm hover:underline"
+                      >
+                        Order #{order.display_id}
+                      </a>
                       <p className="text-xs text-gray-500">
-                        {new Date(order.created_at).toLocaleDateString()} –{" "}
-                        {order.items.length} item
-                        {order.items.length !== 1 ? "s" : ""}
+                        Order date: {new Date(order.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold">
-                        {(order.total / 100).toFixed(2)} {order.currency_code.toUpperCase()}
-                      </p>
-                      <p className="text-xs text-gray-500">{order.fulfillment_status}</p>
+                    <div className="flex items-center gap-3">
+                      <div className="flex gap-2">
+                        {order.items.map((item: any, index: number) => {
+                          if (index < 4) {
+                            const imageUrl = item.product?.thumbnail || "/placeholder.jpg";
+                            return (
+                              <a key={item.id} href={`http://localhost:8000/hr/order/${order.id}/confirmed`}  className="relative w-16 h-16">
+                                <img
+                                  src={imageUrl}
+                                  alt={item.product?.handle}
+                                  className="w-full h-full object-cover rounded-md"
+                                />
+                              </a>
+                            );
+                          }
+                        })}
+                        {order.items.length > 4 && (
+                          <div className="w-16 h-16 bg-gray-300 rounded-md flex items-center justify-center text-xs text-white">
+                            +{order.items.length - 4}
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-semibold">
+                          {(order.total).toFixed(2)}€
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
