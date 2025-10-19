@@ -29,7 +29,7 @@ Medusa 2.10 Backend: Reliable, open-source commerce engine
 Meilisearch integration<br>
 Automated Email communication<br>
 
-#Website overview
+# Website overview<br>
 **Home Page**<br>
 ![Screenshot_1](https://github.com/user-attachments/assets/5f504cff-cd5f-42a6-b15d-f78275cb2ac5)
 
