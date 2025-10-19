@@ -25,9 +25,9 @@ Customer accounts and order history
 Next.js 15 + Tailwind CSS: High performance, flexible architecture
 Medusa 2.10 Backend: Reliable, open-source commerce engine
 
-**To-Do List**
-Meilisearch integration\n
-Automated Email communication
+**To-Do List**<br>
+Meilisearch integration<br>
+Automated Email communication<br>
 
 **Website overview**
 Home Page
