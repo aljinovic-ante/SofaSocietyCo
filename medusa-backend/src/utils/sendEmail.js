@@ -1,9 +1,9 @@
-import nodemailer from "nodemailer"
-import dotenv from "dotenv"
+const nodemailer = require("nodemailer")
+const dotenv = require("dotenv")
 
 dotenv.config()
 
-export const sendEmail = async (to, subject, text) => {
+async function sendEmail(to, subject, text) {
   console.log("Preparing to send email:")
   console.log("To:", to)
   console.log("Subject:", subject)
@@ -32,3 +32,5 @@ export const sendEmail = async (to, subject, text) => {
     console.error("Failed to send email:", err)
   }
 }
+
+module.exports = { sendEmail }

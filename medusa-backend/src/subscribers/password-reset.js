@@ -1,6 +1,6 @@
-import { sendEmail } from "../utils/sendEmail.js"
+const { sendEmail } = require("../utils/sendEmail.js")
 
-export default async function sendPasswordResetEmail({ event: { data } }) {
+async function sendPasswordResetEmail({ event: { data } }) {
   console.log("Password reset event received:", data)
 
   const resetUrl = `http://localhost:8000/auth/reset-pass?token=${data.token}&email=${data.entity_id}`
@@ -13,6 +13,9 @@ export default async function sendPasswordResetEmail({ event: { data } }) {
   )
 }
 
-export const config = {
-  event: "auth.password_reset",
+module.exports = {
+  default: sendPasswordResetEmail,
+  config: {
+    event: "auth.password_reset",
+  },
 }
