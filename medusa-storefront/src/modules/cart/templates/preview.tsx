@@ -4,7 +4,6 @@ import { useState } from "react"
 import { HttpTypes } from "@medusajs/types"
 import Image from "next/image"
 import Link from "next/link"
-import { convertToLocale } from "@lib/util/money"
 
 type ItemsTemplateProps = {
   cart: HttpTypes.StoreCart
@@ -18,16 +17,15 @@ const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
   return (
     <div className="flex flex-col space-y-8">
       {visibleItems.map((item) => {
-        const productHandle =
-          item.variant?.product?.handle || item.product?.handle || ""
-
-        const productUrl = productHandle
-          ? `/hr/products/${productHandle}`
-          : "#"
+        const handle =
+          item.product?.handle || item.variant?.product?.handle || ""
+        const productUrl = handle ? `/hr/products/${handle}` : "/"
+        const subtitle = item.subtitle || item.variant_title || ""
+        const [color, material] = subtitle.split(" / ")
 
         return (
           <div key={item.id} className="flex items-start gap-5">
-            <Link href={productUrl} className="shrink-0">
+            <Link href={productUrl} prefetch={false} className="shrink-0">
               {item.thumbnail && (
                 <Image
                   src={item.thumbnail}
@@ -42,26 +40,29 @@ const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
             <div className="flex flex-col flex-1">
               <Link
                 href={productUrl}
+                prefetch={false}
                 className="font-medium text-base hover:underline hover:text-black transition"
               >
                 {item.title}
               </Link>
 
-              {item.variant && (
-                <span className="text-sm text-gray-600">
-                  Variant: {item.variant.title}
-                </span>
-              )}
+              <span className="text-sm text-gray-600">
+                {color || material ? (
+                  <>
+                    {color}
+                    {color && material ? " / " : ""}
+                    {material}
+                  </>
+                ) : null}
+              </span>
+
               <span className="text-sm text-gray-600">
                 Quantity: {item.quantity}
               </span>
             </div>
 
             <span className="text-base font-medium text-black">
-              {convertToLocale({
-                amount: item.total,
-                currency_code: cart.currency_code,
-              })}
+              {(item.unit_price).toFixed(2)}€
             </span>
           </div>
         )

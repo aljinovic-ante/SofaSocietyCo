@@ -62,7 +62,6 @@ export function CartIcon() {
           <path d="M6 7h12l-1.5 13h-9L6 7z" />
           <path d="M9 7V5a3 3 0 0 1 6 0v2" />
         </svg>
-
         {quantity > 0 && (
           <span className="absolute -top-1 -right-1 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
             {quantity}
@@ -92,8 +91,8 @@ export function CartIcon() {
                 <div className="flex-1 overflow-y-auto space-y-4">
                   {cart.items.map((item: any) => {
                     const product = item.product
-                    const img = product?.thumbnail || "/placeholder.png"
-                    const handle = product?.handle || "unknown-product"
+                    const img = item.thumbnail || product?.thumbnail || "/placeholder.png"
+                    const handle = product?.handle || item.product_handle || "unknown-product"
                     const productLink = `/products/${handle}`
 
                     return (
@@ -123,6 +122,13 @@ export function CartIcon() {
                           >
                             {product?.title || item.title}
                           </Link>
+                          <span className="text-xs text-gray-500 truncate">
+                            {(() => {
+                              const subtitle = item.subtitle || item.variant_title || ""
+                              const [color, material] = subtitle.split(" / ")
+                              return `${color || ""}${color && material ? " / " : ""}${material || ""}`
+                            })()}
+                          </span>
                           <span className="text-xs text-gray-500">
                             {item.quantity} × {formatPrice(item.unit_price)}
                           </span>

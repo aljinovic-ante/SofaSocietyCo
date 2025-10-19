@@ -37,7 +37,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center py-6 px-8">
         <div className="flex items-center gap-4 text-xl font-semibold tracking-tight text-black">
           <Link href="/">SofaSocietyCo.</Link>
-          <span className="text-sm text-black-500">{customer?.email || "offline"}</span>
+          {/* <span className="text-sm text-black-500">{customer?.email || "offline"}</span> */}
         </div>
 
         <nav className="flex gap-10 text-sm font-medium">
