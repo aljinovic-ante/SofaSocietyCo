@@ -112,16 +112,17 @@ yarn dev
 Access storefront at http://localhost:8000.
 
 
-### **Project evaluation**  
+# **Project evaluation**  
 This was my first time working with the Medusa platform.<br>
 At times, it was quite challenging to understand the Medusa Admin UI and the way it handles data and requests - especially during the user authentication phase and the order placement process.<br>
 Both of these issues were eventually solved successfully. I would say that, as expected, the more time I spent working with Medusa, the better I understood it.<br>
 I still have some work to do, such as integrating automated email services for sending password reset links, order receipts, and other similar notifications.<br>
 I managed to send an automated email successfully, but I haven’t yet implemented all related features.<br>
+I also have to improve mobile compatibility since the current CSS is mainly designed for desktop layouts. <br>
 Then, of course, there’s always some polishing to do and potential bugs to fix.<br>
-The total development time is estimated at around 30–35 hours.
+The total development time is estimated at around 30–35 hours, so far.
 
-### **Tech Stack**<br>
+# **Tech Stack**<br>
 Medusa 2.10<br>
 Next.js 15.5 (App Router)<br>
 Tailwind CSS<br>
