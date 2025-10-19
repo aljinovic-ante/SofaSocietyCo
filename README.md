@@ -3,14 +3,14 @@
 Fashion E-commerce Starter is a modern and fully customizable e-commerce template built with Medusa 2.0.
 Inspired by the sustainable furniture brand Sofa Society, this project demonstrates how Medusa v2 can power elegant, personalized, and sustainable online shopping experiences.
 
-**Overview**
+### **Overview**
 
 This starter provides a complete foundation for building a fashion or lifestyle e-commerce store.
 It includes a stylish desktop UI, dynamic product configuration, collection management, and an integrated checkout flow.
 
 Built using Next.js 15.5.6 (App Router) and Tailwind CSS, it’s fast, extendable, and developer-friendly.
 
-**Features**
+### **Features**
 
 Dynamic Materials & Colors: Add customizable materials and color options with automatic price updates
 Editable Collections: Easily manage and personalize collection pages and images
@@ -25,7 +25,7 @@ Customer accounts and order history
 Next.js 15 + Tailwind CSS: High performance, flexible architecture
 Medusa 2.10 Backend: Reliable, open-source commerce engine
 
-**To-Do List**<br>
+### **To-Do List**<br>
 Meilisearch integration<br>
 Automated Email communication<br>
 
@@ -52,14 +52,14 @@ Automated Email communication<br>
 ![Screenshot_12](https://github.com/user-attachments/assets/1aee4f0e-bd7c-4b3d-8dbc-4dce089c97c7)
 
 
-**Requirements**<br>
+### **Requirements**<br>
 Node.js ≥ 20<br>
 Yarn ≥ 3.5 for Medusa, Yarn v1 for Storefront<br>
 Docker & Docker Compose<br>
 
-**Quickstart**
+### **Quickstart**
 
-**Project evaluation**  
+### **Project evaluation**  
 This was my first time working with the Medusa platform.<br>
 At times, it was quite challenging to understand the Medusa Admin UI and the way it handles data and requests - especially during the user authentication phase and the order placement process.<br>
 Both of these issues were eventually solved successfully. I would say that, as expected, the more time I spent working with Medusa, the better I understood it.<br>
@@ -68,7 +68,7 @@ I managed to send an automated email successfully, but I haven’t yet implement
 Then, of course, there’s always some polishing to do and potential bugs to fix.<br>
 The total development time is estimated at around 30–35 hours.
 
-**Tech Stack**<br>
+### **Tech Stack**<br>
 Medusa 2.10<br>
 Next.js 15.5 (App Router)<br>
 Tailwind CSS<br>
