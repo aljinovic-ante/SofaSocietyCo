@@ -58,6 +58,58 @@ Yarn ≥ 3.5 for Medusa, Yarn v1 for Storefront<br>
 Docker & Docker Compose<br>
 
 ### **Quickstart**
+git clone git@github.com:aljinovic-ante/SofaSocietyCo.git
+
+# Reach backend
+cd medusa-backend
+
+# Create .env file
+cp .env.template .env
+
+# Install dependencies
+yarn
+
+# Start db
+docker-compose up -d
+
+# Build the project
+yarn build
+
+# Run migrations
+yarn medusa db:migrate
+
+# Seed database
+yarn seed
+
+# Create an admin user
+yarn medusa user -e "admin@medusa.local" -p "supersecret"
+
+# Start the server
+yarn dev
+
+Access server at http://localhost:9000/app with created user. Go to http://localhost:9000/app/settings/publishable-api-keys, copy the publishable key and paste it into  NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY env variable in the storefront/.env.local file.
+Set System as Tax Provider for Croatia In Medusa Admin:
+1. go to settings
+2. Tax regions
+3. Click on Croatia
+4. Add System as Tax Provider (three dots next to No default rate, edit, add...)
+
+
+
+Storefront
+cd medusa-storefront
+
+# Create the .env.local file
+cp .env.template .env.local
+
+# Install dependencies
+yarn
+
+# Start the server
+yarn dev
+
+Access storefront at http://localhost:8000.
+
 
 ### **Project evaluation**  
 This was my first time working with the Medusa platform.<br>
