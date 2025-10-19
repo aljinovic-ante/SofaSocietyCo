@@ -12,15 +12,15 @@ Built using Next.js 15.5.6 (App Router) and Tailwind CSS, it’s fast, extendabl
 
 ### **Features**
 
-Dynamic Materials & Colors: Add customizable materials and color options with automatic price updates
-Editable Collections: Easily manage and personalize collection pages and images
-Inspiration Page: Showcase real-life product settings and trends
-About Page: Present your brand’s mission and sustainability values
-Stripe Integration: Accept secure online payments via Stripe
-Complete Store Flow: Product listings, cart, checkout, and order confirmation
-Filtering - by category, collection
-Sorting - by price, latest additions
-Customer accounts and order history
+Dynamic Materials & Colors: Add customizable materials and color options with automatic price updates<br>
+Editable Collections: Easily manage and personalize collection pages and images<br>
+Inspiration Page: Showcase real-life product settings and trends<br>
+About Page: Present your brand’s mission and sustainability values<br>
+Stripe Integration: Accept secure online payments via Stripe<br>
+Complete Store Flow: Product listings, cart, checkout, and order confirmation<br>
+Filtering - by category, collection<br>
+Sorting - by price, latest additions<br>
+Customer accounts and order history<br>
 
 Next.js 15 + Tailwind CSS: High performance, flexible architecture
 Medusa 2.10 Backend: Reliable, open-source commerce engine
@@ -28,6 +28,7 @@ Medusa 2.10 Backend: Reliable, open-source commerce engine
 ### **To-Do List**<br>
 Meilisearch integration<br>
 Automated Email communication<br>
+Responsive design for tablet and phone compatibility<br>
 
 # Website overview<br>
 ### **Home Page**<br>
@@ -57,55 +58,55 @@ Node.js ≥ 20<br>
 Yarn ≥ 3.5 for Medusa, Yarn v1 for Storefront<br>
 Docker & Docker Compose<br>
 
-### **Quickstart**
+# **Quickstart**
 git clone git@github.com:aljinovic-ante/SofaSocietyCo.git
 
-# Reach backend
+### Reach backend
 cd medusa-backend
 
-# Create .env file
+### Create .env file
 cp .env.template .env
 
-# Install dependencies
+### Install dependencies
 yarn
 
-# Start db
+### Start db
 docker-compose up -d
 
-# Build the project
+### Build the project
 yarn build
 
-# Run migrations
+### Run migrations
 yarn medusa db:migrate
 
-# Seed database
+### Seed database
 yarn seed
 
-# Create an admin user
+### Create an admin user
 yarn medusa user -e "admin@medusa.local" -p "supersecret"
 
-# Start the server
+### Start the server
 yarn dev
 
-Access server at http://localhost:9000/app with created user. Go to http://localhost:9000/app/settings/publishable-api-keys, copy the publishable key and paste it into  NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY env variable in the storefront/.env.local file.
+Access server at http://localhost:9000/app with created user.<br> Go to http://localhost:9000/app/settings/publishable-api-keys, copy the publishable key and paste it into  NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY env variable in the storefront/.env.local file.<br>
 Set System as Tax Provider for Croatia In Medusa Admin:
 1. go to settings
 2. Tax regions
 3. Click on Croatia
 4. Add System as Tax Provider (three dots next to No default rate, edit, add...)
 
+<br>
 
-
-Storefront
+# Storefront
 cd medusa-storefront
 
-# Create the .env.local file
+### Create the .env.local file
 cp .env.template .env.local
 
-# Install dependencies
+### Install dependencies
 yarn
 
-# Start the server
+### Start the server
 yarn dev
 
 Access storefront at http://localhost:8000.
