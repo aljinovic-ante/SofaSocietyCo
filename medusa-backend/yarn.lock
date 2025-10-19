@@ -3869,7 +3869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/payment-stripe@npm:2.10.3":
+"@medusajs/payment-stripe@npm:2.10.3, @medusajs/payment-stripe@npm:^2.10.3":
   version: 2.10.3
   resolution: "@medusajs/payment-stripe@npm:2.10.3"
   dependencies:
@@ -14725,6 +14725,7 @@ __metadata:
     "@medusajs/js-sdk": "npm:^2.10.3"
     "@medusajs/medusa": "npm:2.10.3"
     "@medusajs/order": "npm:^2.10.3"
+    "@medusajs/payment-stripe": "npm:^2.10.3"
     "@medusajs/region": "npm:^2.10.3"
     "@medusajs/test-utils": "npm:2.10.3"
     "@medusajs/types": "npm:^2.10.3"

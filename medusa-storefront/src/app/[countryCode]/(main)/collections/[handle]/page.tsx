@@ -64,8 +64,9 @@ export async function generateStaticParams() {
     .flat()
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const collection = await getCollectionByHandle(params.handle)
+export async function generateMetadata(props: { params: Promise<{ handle: string }> }): Promise<Metadata> {
+  const { handle } = await props.params
+  const collection = await getCollectionByHandle(handle)
   if (!collection) notFound()
 
   return {
@@ -73,10 +74,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: `${collection.title} collection`,
   }
 }
-
-export default async function CollectionPage({ params, searchParams }: Props) {
-  const { handle, countryCode } = params
-  const { page, category, sortBy } = searchParams
+export default async function CollectionPage(props: {
+  params: Promise<{ handle: string; countryCode: string }>
+  searchParams: Promise<{ page?: string; sortBy?: SortOptions; category?: string }>
+}) {
+  const { handle, countryCode } = await props.params
+  const { page, category, sortBy } = await props.searchParams
 
   const medusaCollection = await getCollectionByHandle(handle)
   if (!medusaCollection) notFound()

@@ -9,7 +9,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { handle } = await params
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/products?handle=${handle}&region_id=reg_01K7P8H7TRF9E0AXS39PAGVT5H`,
+    `${process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL}/store/products?handle=${handle}&region_id=${process.env.NEXT_PUBLIC_REGION_ID}`,
     {
       headers: {
         "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,

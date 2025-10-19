@@ -46,5 +46,30 @@ export default defineConfig({
         ],
       },
     },
+
+    fashionModuleService: {
+      resolve: "./src/modules/fashion",
+      options: {
+        moduleConfig: {
+          migrations: ["./src/modules/fashion/migrations"],
+        },
+      },
+    },
+
+    payment: {
+      resolve: "@medusajs/medusa/payment",
+      options: {
+        providers: [
+          {
+            id: "stripe",
+            resolve: "@medusajs/payment-stripe",
+            options: {
+              apiKey: process.env.STRIPE_API_KEY,
+              webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+            },
+          },
+        ],
+      },
+    },
   },
 })
