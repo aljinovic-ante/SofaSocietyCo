@@ -96,6 +96,11 @@ export default function Shipping({
 
   return (
     <div className="flex flex-col gap-4">
+      {availableShippingMethods.length === 1 && (
+        <p className="text-base font-medium text-gray-800 mb-4">
+          There are no delivery options available for your region.
+        </p>
+      )}
       {availableShippingMethods.map((option) => {
         const isSelected = selected === option.id
         return (

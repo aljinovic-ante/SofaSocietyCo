@@ -19,8 +19,19 @@ export const useCartShippingMethods = (cartId: string) => {
           }
         )
         const data = await res.json()
-        console.log("SHIPPING OPTIONS RESPONSE:", data)
-        return data?.shipping_options || []
+        const options = data?.shipping_options || []
+
+        // Inject manual pickup option - useful if no regions for delivery available
+        const pickupOption = {
+          id: "manual_pickup",
+          name: "Pickup in Store",
+          price: 0,
+          data: {},
+          type: "manual",
+        }
+
+        console.log("🚚 SHIPPING OPTIONS RESPONSE:", options)
+        return [...options, pickupOption]
       } catch (err) {
         console.error("ERROR FETCHING SHIPPING OPTIONS:", err)
         return []
@@ -38,7 +49,13 @@ export const useSetShippingMethod = (
   return useMutation({
     mutationKey: ["set-shipping-method", cartId],
     mutationFn: async ({ shippingMethodId }: { shippingMethodId: string }) => {
-      await sdk.store.cart.addShippingMethod(cartId, { option_id: shippingMethodId })
+      if (shippingMethodId === "manual_pickup") {
+      await sdk.store.cart.update(cartId, {
+          metadata: { pickup: true },
+        })
+      } else {
+        await sdk.store.cart.addShippingMethod(cartId, { option_id: shippingMethodId })
+      }
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["cart"] })

@@ -141,7 +141,10 @@ export default function Checkout() {
                     onCartUpdate={(updatedCart) => {
                       setCart(updatedCart)
                       const shippingMethods = updatedCart.shipping_methods ?? []
-                      if (shippingMethods.length > 0) {
+                      const isPickup = updatedCart.metadata?.pickup === true
+                      const hasShippingMethod = (updatedCart.shipping_methods?.length || 0) > 0
+
+                      if (hasShippingMethod || isPickup) {
                         setDeliveryConfirmed(true)
                       } else {
                         setDeliveryConfirmed(false)
