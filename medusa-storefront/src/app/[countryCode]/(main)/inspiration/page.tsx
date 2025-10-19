@@ -128,7 +128,7 @@ export default function InspirationPage() {
                     <div className="flex justify-between text-base font-medium w-[340px]">
                       <div>
                         <p className="font-semibold text-lg">{p.title}</p>
-                        <p className="text-black-500 text-sm">
+                        <p className="text-black text-sm font-normal">
                           {p.collection?.title}
                         </p>
                       </div>

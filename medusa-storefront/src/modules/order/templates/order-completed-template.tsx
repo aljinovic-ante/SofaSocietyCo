@@ -2,6 +2,7 @@ import { HttpTypes } from "@medusajs/types"
 import { twMerge } from "tailwind-merge"
 import { retrieveCustomer } from "@/lib/data/customer"
 import { listOrders } from "@/lib/data/orders"
+// import SendOrderEmail from "@/components/SendOrderEmail"
 
 type OrderCompletedTemplateProps = {
   order: HttpTypes.StoreOrder
@@ -36,6 +37,8 @@ export default async function OrderCompletedTemplate({
   const total = subtotal + shipping + taxes
 
   return (
+    <>
+    {/* {customer && <SendOrderEmail order={order} customer={customer} />} */}
     <div className="mx-auto grid grid-cols-12 gap-x-4 md:gap-x-12 px-4 sm:container py-20 pt-32">
       <div className="col-start-1 col-end-13 lg:col-start-3 lg:col-end-11 xl:col-start-4 xl:col-end-10">
         <h1 className="text-3xl md:text-5xl text-left mb-10 md:mb-20">
@@ -203,5 +206,6 @@ export default async function OrderCompletedTemplate({
         </div>
       </div>
     </div>
+    </>
   )
 }

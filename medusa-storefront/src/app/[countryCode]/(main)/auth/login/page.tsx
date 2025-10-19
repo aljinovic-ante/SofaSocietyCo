@@ -104,7 +104,7 @@ export default function LoginPage() {
 
           <p className="text-sm text-black-600 mt-2 text-center">
             Forgot your password?{" "}
-            <Link href="#" className="underline">
+            <Link href="/auth/forgot-pass" className="underline">
               Reset your password
             </Link>
             .

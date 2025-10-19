@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>Order Confirmation</h2>
+    <p>Hi {{customer.first_name}},</p>
+    <p>Thank you for your order! We're happy to confirm that your order #{{order.display_id}} has been successfully placed.</p>
+
+    <h3>Order Details:</h3>
+    <p><strong>Shipping Address:</strong></p>
+    <p>{{shipping_address.first_name}} {{shipping_address.last_name}}<br>
+       {{shipping_address.address_1}}, {{shipping_address.city}}, {{shipping_address.province}} {{shipping_address.postal_code}}, {{shipping_address.country}}<br>
+       Phone: {{shipping_address.phone}}</p>
+
+    <p><strong>Items Ordered:</strong></p>
+    <ul>
+      {{#each order.items}}
+        <li>{{this.quantity}} x {{this.product_title}} - €{{this.unit_price}}</li>
+      {{/each}}
+    </ul>
+
+    <p><strong>Total:</strong> €{{order.total}}</p>
+
+    <p>We will notify you when your order has been shipped. In the meantime, you can track your order by visiting your account page.</p>
+
+    <p>If you have any questions, feel free to contact our customer service team.</p>
+
+    <p>— Sofa Society Team</p>
+  </body>
+</html>

@@ -147,6 +147,77 @@ export async function login(formData: FormData) {
   }
 }
 
+const resetPasswordSchema = z.object({
+  email: z.string().email(),
+  new_password: z.string().min(6),
+  current_password: z.string().optional(),
+  type: z.enum(["reset", "forgot"]),
+  token: z.string().optional(),
+})
+
+export async function resetPassword(
+  currentState: unknown,
+  formData: z.infer<typeof resetPasswordSchema>
+): Promise<
+  z.infer<typeof resetPasswordSchema> & 
+    ({ state: "initial" | "success" } | { state: "error"; error: string })
+> {
+  const validatedState = resetPasswordSchema.parse({
+    ...(typeof currentState === "object" && currentState !== null ? currentState : {}),
+    ...formData,
+  });
+
+  try {
+    if (formData.type === "forgot") {
+      console.log("Attempting password reset...");
+      const response = await sdk.client.fetch(`/auth/customer/emailpass/reset-password`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-medusa-access-token": validatedState.token!,
+          "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY!,
+          "x-medusa-password": validatedState.new_password,
+        },
+        body: JSON.stringify({
+          identifier: validatedState.email,
+        }),
+      });
+
+      const textResponse = await response.text();
+      console.log("Password reset response:", textResponse);
+
+      if (textResponse === "Created") {
+        return { ...validatedState, state: "success" as const };
+      } else {
+        return {
+          ...validatedState,
+          state: "error" as const,
+          error: `Unexpected response: ${textResponse}`,
+        };
+      }
+    } else {
+      await sdk.auth.updateProvider(
+        "logged-in-customer",
+        "emailpass",
+        {
+          email: validatedState.email,
+          password: validatedState.new_password,
+        },
+        validatedState.token
+      );
+      return { ...validatedState, state: "success" as const };
+    }
+  } catch (error) {
+    console.error("Error during password reset:", error);
+    return {
+      ...validatedState,
+      state: "error" as const,
+      error: `Failed to update password: ${error instanceof Error ? error.message : error}`,
+    };
+  }
+}
+
+
 export async function signout(countryCode: string) {
   await sdk.auth.logout()
 

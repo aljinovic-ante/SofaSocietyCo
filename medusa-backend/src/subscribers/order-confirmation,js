@@ -1,0 +1,49 @@
+import { sendEmail } from "../utils/sendEmail.js"
+
+export default async function sendOrderConfirmationEmail({ event: { data } }) {
+  console.log("Order placed event received:", data)
+
+  const order = data.order
+  const customer = data.customer
+
+  const html = `
+    <html>
+      <body>
+        <h2>Order Confirmation</h2>
+        <p>Hi ${customer.first_name},</p>
+        <p>Thank you for your order! We're happy to confirm that your order #${order.display_id} has been successfully placed.</p>
+
+        <h3>Order Details:</h3>
+        <p><strong>Shipping Address:</strong></p>
+        <p>${order.shipping_address.first_name} ${order.shipping_address.last_name}<br>
+           ${order.shipping_address.address_1}, ${order.shipping_address.city}, ${order.shipping_address.province} ${order.shipping_address.postal_code}, ${order.shipping_address.country}<br>
+           Phone: ${order.shipping_address.phone}</p>
+
+        <p><strong>Items Ordered:</strong></p>
+        <ul>
+          ${order.items.map(item => `
+            <li>${item.quantity} x ${item.product_title} - €${item.unit_price}</li>
+          `).join('')}
+        </ul>
+
+        <p><strong>Total:</strong> €${order.total}</p>
+
+        <p>We will notify you when your order has been shipped. In the meantime, you can track your order by visiting your account page.</p>
+
+        <p>If you have any questions, feel free to contact our customer service team.</p>
+
+        <p>— Sofa Society Team</p>
+      </body>
+    </html>
+  `
+
+  await sendEmail(
+    customer.email,
+    "Sofa Society – Order Confirmation",
+    html
+  )
+}
+
+export const config = {
+  event: "order_placed",
+}
