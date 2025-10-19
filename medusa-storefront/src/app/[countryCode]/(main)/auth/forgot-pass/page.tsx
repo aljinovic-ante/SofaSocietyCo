@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
           </h1>
 
           <p className="text-gray-600 text-base mb-6">
-            Enter your email address and we’ll send you a link to reset your password.
+            Enter your email address and we’ll send you a link to reset your password. This feature is Work In Progress. Email will be sent though.
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">

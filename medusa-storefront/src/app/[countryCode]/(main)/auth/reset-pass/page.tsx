@@ -96,7 +96,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         <div className="w-full max-w-lg">
           <h1 className="text-5xl font-semibold mb-10 leading-tight">
             Reset your
-            <br /> password
+            <br /> password (WIP)
           </h1>
 
           <p className="text-gray-600 text-base mb-6">

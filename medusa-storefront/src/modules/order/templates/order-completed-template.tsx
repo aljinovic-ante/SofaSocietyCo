@@ -50,7 +50,7 @@ export default async function OrderCompletedTemplate({
           and will be processed shortly.
         </p>
         <p className="text-left mb-12">
-          We have sent you the receipt and order details via <strong>e-mail</strong>.<br />
+          We have sent you the receipt and order details via <strong>e-mail (WIP)</strong>.<br />
           Your order number is <strong>#{order.display_id}</strong>.
         </p>
 
