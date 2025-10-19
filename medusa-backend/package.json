@@ -33,6 +33,7 @@
     "@medusajs/order": "^2.10.3",
     "@medusajs/payment-stripe": "^2.10.3",
     "@medusajs/region": "^2.10.3",
+    "@medusajs/tax": "^2.10.3",
     "@medusajs/types": "^2.10.3",
     "@medusajs/utils": "^2.10.3",
     "@medusajs/workflows-sdk": "^2.10.3",

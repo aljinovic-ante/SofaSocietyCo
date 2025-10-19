@@ -3998,7 +3998,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/tax@npm:2.10.3":
+"@medusajs/tax@npm:2.10.3, @medusajs/tax@npm:^2.10.3":
   version: 2.10.3
   resolution: "@medusajs/tax@npm:2.10.3"
   peerDependencies:
@@ -14727,6 +14727,7 @@ __metadata:
     "@medusajs/order": "npm:^2.10.3"
     "@medusajs/payment-stripe": "npm:^2.10.3"
     "@medusajs/region": "npm:^2.10.3"
+    "@medusajs/tax": "npm:^2.10.3"
     "@medusajs/test-utils": "npm:2.10.3"
     "@medusajs/types": "npm:^2.10.3"
     "@medusajs/utils": "npm:^2.10.3"

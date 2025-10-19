@@ -32,10 +32,13 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
   const [loadingCustomer, setLoadingCustomer] = useState(true)
 
   useEffect(() => {
+    console.log("Addresses component mounted. Loading customer...")
     async function loadCustomer() {
       try {
         const cust = customer || (await retrieveCustomer())
+        console.log("Customer loaded:", cust)
         const address = cust?.addresses?.[0]
+        console.log("Using address:", address)
 
         setForm({
           first_name: cust?.first_name || "",
@@ -47,8 +50,11 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
           province: address?.province || "",
           phone: address?.phone || "",
         })
+      } catch (e) {
+        console.error("Error loading customer:", e)
       } finally {
         setLoadingCustomer(false)
+        console.log("Finished loading customer data.")
       }
     }
     loadCustomer()
@@ -62,6 +68,10 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
   }
 
   const handleSave = async () => {
+    console.group("handleSave triggered")
+    console.log("Current cart:", cart)
+    console.log("Current form:", form)
+
     const requiredFields = [
       "first_name",
       "last_name",
@@ -74,8 +84,10 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
     const missing = requiredFields.filter((field) => !form[field as keyof typeof form]?.trim())
 
     if (missing.length > 0) {
+      console.warn("Missing required fields:", missing)
       setError("Not all required fields are filled.")
       setInvalidFields(missing)
+      console.groupEnd()
       return
     }
 
@@ -88,18 +100,42 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
         country_code: "hr",
       }
 
-      await sdk.store.cart.update(cart.id, {
+      console.log("Sending request to update cart:", cart?.id)
+      const res = await sdk.store.cart.update(cart.id, {
         shipping_address: normalizedForm,
         billing_address: normalizedForm,
       })
+      console.log("Cart update response:", res)
 
-      if (onComplete) onComplete()
+      if (onComplete) {
+        console.log("onComplete callback triggered.")
+        onComplete()
+      }
+
       router.refresh()
-    } catch (err) {
-      console.error("Failed to save address:", err)
+      console.log("Router refreshed.")
+    } catch (err: any) {
+      console.group("Error in handleSave")
+      console.error("Full error object:", err)
+
+      if (err?.response) {
+        console.error("Response status:", err.response.status)
+        try {
+          const data = await err.response.json()
+          console.error("Response data:", data)
+        } catch {
+          console.error("Response body not JSON.")
+        }
+      } else if (err?.message) {
+        console.error("Error message:", err.message)
+      }
+
+      console.groupEnd()
       setError("Failed to save address. Please try again.")
     } finally {
+      console.log("handleSave finished.")
       setIsSaving(false)
+      console.groupEnd()
     }
   }
 
@@ -110,8 +146,12 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
         : "border-gray-300 focus:ring-black"
     }`
 
-  if (loadingCustomer)
+  if (loadingCustomer) {
+    console.log("Still loading customer...")
     return <p className="text-gray-600 text-sm">Loading address data...</p>
+  }
+
+  console.log("Rendering address form with data:", form)
 
   return (
     <section className="bg-white">

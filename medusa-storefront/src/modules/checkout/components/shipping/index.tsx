@@ -16,6 +16,8 @@ export default function Shipping({
   cart: StoreCart
   onCartUpdate: (updated: StoreCart) => void
 }) {
+  console.log("Shipping component mounted. Cart received:", cart)
+
   const [error, setError] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(
     cart.shipping_methods?.[0]?.shipping_option_id || null
@@ -24,19 +26,31 @@ export default function Shipping({
   const searchParams = useSearchParams()
   const isOpen = searchParams.get("step") === "shipping"
 
-  const { data: availableShippingMethods } = useCartShippingMethods(cart.id)
+  const { data: availableShippingMethods, isLoading, error: shippingError } = useCartShippingMethods(cart.id)
   const queryClient = useQueryClient()
   const { mutate, isPending } = useSetShippingMethod({ cartId: cart.id })
 
+  console.log("useCartShippingMethods returned:", {
+    isLoading,
+    shippingError,
+    availableShippingMethods,
+  })
+
   const handleSelect = (id: string) => {
+    console.log("Shipping option clicked:", id)
     setError(null)
     setSelected(id)
     setShippingSelected(true)
+
     mutate(
       { shippingMethodId: id },
       {
-        onError: (err) => setError(err.message),
+        onError: (err: any) => {
+          console.error("Failed to set shipping method:", err)
+          setError(err.message)
+        },
         onSuccess: async () => {
+          console.log("Shipping method set successfully. Refreshing cart...")
           try {
             await queryClient.invalidateQueries({ queryKey: ["cart"] })
             await queryClient.invalidateQueries({
@@ -44,28 +58,41 @@ export default function Shipping({
             })
 
             const response = await sdk.client.fetch(`/store/carts/${cart.id}`)
+            console.log("Cart refreshed after shipping update:", response)
             const updatedCart = response.cart
             onCartUpdate(updatedCart)
           } catch (e: any) {
             console.error("Failed to refresh cart after shipping change:", e)
           }
-        }
+        },
       }
     )
   }
 
   useEffect(() => {
+    console.log("Shipping component re-rendered. isOpen:", isOpen)
     setError(null)
     setShippingSelected(false)
   }, [isOpen])
 
+  if (isLoading) {
+    console.log("Loading shipping methods...")
+  }
+
+  if (shippingError) {
+    console.error("Error loading shipping methods:", shippingError)
+  }
+
   if (!availableShippingMethods?.length) {
+    console.warn("No shipping methods available for this cart:", cart)
     return (
       <p className="text-red-900">
         There are no shipping methods available for your location. Please contact us for assistance.
       </p>
     )
   }
+
+  console.log("Rendering shipping options:", availableShippingMethods)
 
   return (
     <div className="flex flex-col gap-4">

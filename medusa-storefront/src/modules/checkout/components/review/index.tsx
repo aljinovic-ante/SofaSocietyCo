@@ -87,14 +87,14 @@ export default function Review({
           </li>
         </ul>
 
-        {customer?.addresses?.[0] && (
+        {/* {customer?.addresses?.[0] && (
           <div className="mt-4">
             <h3 className="font-semibold">Shipping Address</h3>
             <p>{customer?.addresses[0]?.line1}</p>
             <p>{customer?.addresses[0]?.city}</p>
             <p>{customer?.addresses[0]?.country}</p>
           </div>
-        )}
+        )} */}
       </div>
 
       {error && <p className="text-red-600 text-sm mb-3">{error}</p>}

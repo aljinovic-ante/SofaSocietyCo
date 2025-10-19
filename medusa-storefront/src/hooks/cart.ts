@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { sdk } from "@lib/config"
 
-const DEFAULT_REGION_ID = "reg_01K7P8H7TRF9E0AXS39PAGVT5H"
+// const DEFAULT_REGION_ID = "reg_01K7P8H7TRF9E0AXS39PAGVT5H"
 
 export const useCartShippingMethods = (cartId: string) => {
   return useQuery({
@@ -48,18 +48,52 @@ export const useSetShippingMethod = (
 
 async function fetchCart() {
   try {
+    console.log("[fetchCart] Starting fetchCart()")
+
     const result = await sdk.store.cart.retrieve()
-    if (result?.cart) return result.cart
+    console.log("[fetchCart] Cart retrieve result:", result)
+
+    if (result?.cart) {
+      console.log("[fetchCart] Existing cart found:", result.cart.id)
+      console.log("[fetchCart] Cart region:", result.cart.region_id)
+      console.log("[fetchCart] Cart region details:", result.cart.region)
+      return result.cart
+    }
+
+    console.log("[fetchCart] No existing cart found — fetching regions...")
+
+    const regions = await sdk.store.region.list()
+    console.log("[fetchCart] Regions list response:", regions)
+
+    const region = regions?.regions?.[0]
+
+    if (!region) {
+      console.error("[fetchCart] No regions found in backend!")
+      return null
+    }
+
+    console.log(
+      `[fetchCart] Selected region: ${region.name} (${region.id}), countries:`,
+      region.countries?.map((c: any) => c.display_name || c.iso_2)
+    )
+
+    console.log("[fetchCart] Creating a new cart in region:", region.id)
     const created = await sdk.store.cart.create({
-      region_id: DEFAULT_REGION_ID,
+      region_id: region.id,
     })
+
+    console.log("[fetchCart] Cart created successfully:", created)
+    console.log("[fetchCart] New cart ID:", created.cart?.id)
+    console.log("[fetchCart] New cart region:", created.cart?.region_id)
+    console.log("[fetchCart] New cart details:", created.cart)
 
     return created.cart
   } catch (err: any) {
-    console.error("Cart fetch failed:", err?.message || err)
+    console.error("[fetchCart] Cart fetch failed:", err?.message || err)
     return null
   }
 }
+
 
 export const useCart = ({ enabled = true } = {}) => {
   return useQuery({

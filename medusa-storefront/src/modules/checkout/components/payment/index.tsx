@@ -64,8 +64,8 @@ export default function Payment({ cart, onCardComplete }: PaymentProps) {
     onCardComplete(e.complete)
   }
 
-  const paymentReady = cart?.shipping_methods?.length > 0
-
+  // const paymentReady = cart?.shipping_methods?.length > 0
+  const paymentReady = true
   return (
     <Elements stripe={stripePromise}>
       <div className="bg-white">
