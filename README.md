@@ -60,7 +60,7 @@ Docker & Docker Compose
 **Quickstart**
 
 **Project evaluation**
-This was my first time working with the Medusa platform. At times, it was quite challenging to understand the Medusa Admin UI and the way it handles data and requests—especially during the user authentication phase and the order placement process. Both of these issues were eventually solved successfully. I would say that, as expected, the more time I spent working with Medusa, the better I understood it. I still have some work to do, such as integrating automated email services for sending password reset links, order receipts, and other similar notifications. I managed to send an automated email successfully, but I haven’t yet implemented all related features. Then, of course, there’s always some polishing to do and potential bugs to fix.
+This was my first time working with the Medusa platform.\nAt times, it was quite challenging to understand the Medusa Admin UI and the way it handles data and requests—especially during the user authentication phase and the order placement process. Both of these issues were eventually solved successfully. I would say that, as expected, the more time I spent working with Medusa, the better I understood it.\nI still have some work to do, such as integrating automated email services for sending password reset links, order receipts, and other similar notifications. I managed to send an automated email successfully, but I haven’t yet implemented all related features. Then, of course, there’s always some polishing to do and potential bugs to fix.\n
 The total development time is estimated at around 30–35 hours.
 
 
