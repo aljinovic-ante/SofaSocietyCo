@@ -26,10 +26,6 @@ export default function ProductClient({ product }: { product: any }) {
   const [isAdding, setIsAdding] = useState(false)
   const pathname = usePathname()
 
-  useEffect(() => {
-    retrieveCustomer().then(setCustomer).catch(() => setCustomer(null))
-  }, [])
-
   const images = product?.images?.length
     ? product.images.map((i: any) => i.url)
     : [product.thumbnail]
@@ -39,10 +35,6 @@ export default function ProductClient({ product }: { product: any }) {
       o.title.toLowerCase() === "material" || o.title.toLowerCase() === "materials"
   )
   const productMaterials = materialOption?.values?.map((v: any) => v.value.trim()) || []
-
-  useEffect(() => {
-    setSelectedColor("")
-  }, [selectedMaterial])
 
   const availableColors = useMemo(() => {
     if (!selectedMaterial) return []
@@ -103,16 +95,12 @@ export default function ProductClient({ product }: { product: any }) {
   const canAddToCart = Boolean(selectedVariant)
 
   const handleAddToCart = async () => {
-    setFeedbackMessage({ text: "", type: null })
-    if (!customer) {
-      setShowLoginWarning(true)
-      return
-    }
     if (!selectedVariant) return
-    setShowLoginWarning(false)
     setIsAdding(true)
+    setFeedbackMessage({ text: "", type: null })
 
     const countryCode = pathname.split("/")[1] || "hr"
+
     try {
       await addToCart({
         variantId: selectedVariant.id,
@@ -247,11 +235,6 @@ export default function ProductClient({ product }: { product: any }) {
           >
             {isAdding ? "Adding..." : "Add to cart"}
           </button>
-          {showLoginWarning && (
-            <p className="text-sm text-red-600 font-semibold">
-              Log in to add items to your cart
-            </p>
-          )}
 
           {feedbackMessage.type && (
             <p

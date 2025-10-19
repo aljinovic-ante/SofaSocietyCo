@@ -16,11 +16,11 @@ const CartTemplate = ({
 }) => {
   const router = useRouter()
 
-  useEffect(() => {
-    if (!customer) {
-      router.push("/auth/login")
-    }
-  }, [customer, router])
+  // useEffect(() => {
+  //   if (!customer) {
+  //     router.push("/auth/login")
+  //   }
+  // }, [customer, router])
   return (
     <div className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-8" data-testid="cart-container">

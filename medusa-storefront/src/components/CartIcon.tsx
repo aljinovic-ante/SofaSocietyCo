@@ -162,9 +162,9 @@ export function CartIcon() {
             ) : (
               <div className="flex-1 flex items-center justify-center text-gray-500">
                 Your cart is empty.{" "}
-                <a href="/auth/login" className="text-blue-600 hover:underline ml-2">
+                {/* <a href="/auth/login" className="text-blue-600 hover:underline ml-2">
                   Log in
-                </a>
+                </a> */}
               </div>
             )}
           </div>

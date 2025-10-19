@@ -57,7 +57,7 @@ const Summary = ({ cart }: SummaryProps) => {
         <div className="bg-gray-100 text-gray-700 text-sm rounded-md py-3 px-4 mt-2 text-center">
           <span>
             Already have an account? No worries, just{" "}
-            <a href="/account" className="underline font-medium text-black">
+            <a href="/auth/login" className="underline font-medium text-black">
               log in.
             </a>
           </span>

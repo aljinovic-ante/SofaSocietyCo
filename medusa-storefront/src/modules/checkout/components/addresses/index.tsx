@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useCustomer, useAddressMutation } from "@/hooks/customer"
-import { useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { Heading } from "@medusajs/ui"
 import Divider from "@modules/common/components/divider"
+import { sdk } from "@lib/config"
+import { retrieveCustomer } from "@lib/data/customer"
 
 type AddressesProps = {
   cart: any
@@ -15,44 +15,44 @@ type AddressesProps = {
 
 export default function Addresses({ cart, customer, onComplete }: AddressesProps) {
   const router = useRouter()
-  const queryClient = useQueryClient()
-  const { data: customerData, isLoading } = useCustomer()
-  const address = customerData?.addresses?.[0] || null
 
   const [form, setForm] = useState({
+    first_name: "",
+    last_name: "",
     address_1: "",
     address_2: "",
     city: "",
     postal_code: "",
     province: "",
-    country_code: "hr",
     phone: "",
   })
   const [error, setError] = useState("")
   const [invalidFields, setInvalidFields] = useState<string[]>([])
+  const [isSaving, setIsSaving] = useState(false)
+  const [loadingCustomer, setLoadingCustomer] = useState(true)
 
   useEffect(() => {
-    if (address) {
-      setForm({
-        address_1: address.address_1 || "",
-        address_2: address.address_2 || "",
-        city: address.city || "",
-        postal_code: address.postal_code || "",
-        province: address.province || "",
-        country_code: address.country_code || "hr",
-        phone: address.phone || "",
-      })
-      if (onComplete) onComplete()
-    }
-  }, [address])
+    async function loadCustomer() {
+      try {
+        const cust = customer || (await retrieveCustomer())
+        const address = cust?.addresses?.[0]
 
-  const mutation = useAddressMutation(address?.id, {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["customer"] })
-      router.refresh()
-      if (onComplete) onComplete()
-    },
-  })
+        setForm({
+          first_name: cust?.first_name || "",
+          last_name: cust?.last_name || "",
+          address_1: address?.address_1 || "",
+          address_2: address?.address_2 || "",
+          city: address?.city || "",
+          postal_code: address?.postal_code || "",
+          province: address?.province || "",
+          phone: address?.phone || "",
+        })
+      } finally {
+        setLoadingCustomer(false)
+      }
+    }
+    loadCustomer()
+  }, [customer])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -61,8 +61,16 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
     setInvalidFields((prev) => prev.filter((f) => f !== name))
   }
 
-  const handleSave = () => {
-    const requiredFields = ["address_1", "city", "postal_code", "province", "phone"]
+  const handleSave = async () => {
+    const requiredFields = [
+      "first_name",
+      "last_name",
+      "address_1",
+      "city",
+      "postal_code",
+      "province",
+      "phone",
+    ]
     const missing = requiredFields.filter((field) => !form[field as keyof typeof form]?.trim())
 
     if (missing.length > 0) {
@@ -71,11 +79,29 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
       return
     }
 
+    setIsSaving(true)
     setError("")
-    mutation.mutate(form as any)
-  }
 
-  if (isLoading) return <p className="text-gray-600 text-sm">Loading address...</p>
+    try {
+      const normalizedForm = {
+        ...form,
+        country_code: "hr",
+      }
+
+      await sdk.store.cart.update(cart.id, {
+        shipping_address: normalizedForm,
+        billing_address: normalizedForm,
+      })
+
+      if (onComplete) onComplete()
+      router.refresh()
+    } catch (err) {
+      console.error("Failed to save address:", err)
+      setError("Failed to save address. Please try again.")
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   const inputClass = (name: string) =>
     `border rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-1 transition ${
@@ -84,6 +110,9 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
         : "border-gray-300 focus:ring-black"
     }`
 
+  if (loadingCustomer)
+    return <p className="text-gray-600 text-sm">Loading address data...</p>
+
   return (
     <section className="bg-white">
       <Heading level="h2" className="text-base font-semibold mb-6">
@@ -91,6 +120,22 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
       </Heading>
 
       <div className="border border-gray-200 rounded-md p-6 flex flex-col gap-3 w-full">
+        <div className="flex gap-3">
+          <input
+            name="first_name"
+            value={form.first_name}
+            onChange={handleChange}
+            placeholder="First name *"
+            className={`${inputClass("first_name")} w-1/2`}
+          />
+          <input
+            name="last_name"
+            value={form.last_name}
+            onChange={handleChange}
+            placeholder="Last name *"
+            className={`${inputClass("last_name")} w-1/2`}
+          />
+        </div>
         <input
           name="address_1"
           value={form.address_1}
@@ -129,13 +174,6 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
           className={inputClass("province")}
         />
         <input
-          name="country_code"
-          value={form.country_code}
-          onChange={handleChange}
-          placeholder="Country code (e.g. hr)"
-          className={inputClass("country_code")}
-        />
-        <input
           name="phone"
           value={form.phone}
           onChange={handleChange}
@@ -143,14 +181,16 @@ export default function Addresses({ cart, customer, onComplete }: AddressesProps
           className={inputClass("phone")}
         />
 
+        <input type="hidden" name="country_code" value="hr" />
+
         {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
 
         <button
           onClick={handleSave}
-          disabled={mutation.isPending}
+          disabled={isSaving}
           className="w-40 h-10 bg-black text-white rounded-md text-sm font-medium hover:bg-neutral-900 transition disabled:opacity-70 mt-3"
         >
-          {mutation.isPending ? "Saving..." : "Save and continue"}
+          {isSaving ? "Saving..." : "Save and continue"}
         </button>
       </div>
 

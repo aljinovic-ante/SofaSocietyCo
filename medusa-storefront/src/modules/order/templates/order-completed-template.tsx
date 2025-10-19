@@ -24,6 +24,17 @@ export default async function OrderCompletedTemplate({
       ? order.shipping_address
       : fallbackAddress
 
+  const billingAddress =
+    order.billing_address && order.billing_address.address_1
+      ? order.billing_address
+      : fallbackAddress
+
+  const subtotal =
+    order.items?.reduce((sum, i) => sum + i.unit_price * i.quantity, 0) || 0
+  const shipping = order.shipping_total || 0
+  const taxes = order.tax_total || 0
+  const total = subtotal + shipping + taxes
+
   return (
     <div className="mx-auto grid grid-cols-12 gap-x-4 md:gap-x-12 px-4 sm:container py-20 pt-32">
       <div className="col-start-1 col-end-13 lg:col-start-3 lg:col-end-11 xl:col-start-4 xl:col-end-10">
@@ -64,7 +75,7 @@ export default async function OrderCompletedTemplate({
               <p className="text-grayscale-500">Delivery address</p>
             </div>
             <p>
-              {[shippingAddress?.first_name || customer?.first_name, shippingAddress?.last_name || customer?.last_name]
+              {[shippingAddress?.first_name, shippingAddress?.last_name]
                 .filter(Boolean)
                 .join(" ")}
               <br />
@@ -78,7 +89,7 @@ export default async function OrderCompletedTemplate({
                 .filter(Boolean)
                 .join(", ")}
               <br />
-              {shippingAddress?.phone || customer?.phone}
+              {shippingAddress?.phone}
             </p>
           </div>
 
@@ -88,21 +99,21 @@ export default async function OrderCompletedTemplate({
               <p className="text-grayscale-500">Billing address</p>
             </div>
             <p>
-              {[shippingAddress?.first_name || customer?.first_name, shippingAddress?.last_name || customer?.last_name]
+              {[billingAddress?.first_name, billingAddress?.last_name]
                 .filter(Boolean)
                 .join(" ")}
               <br />
               {[
-                shippingAddress?.address_1,
-                [shippingAddress?.postal_code, shippingAddress?.city]
+                billingAddress?.address_1,
+                [billingAddress?.postal_code, billingAddress?.city]
                   .filter(Boolean)
                   .join(" "),
-                shippingAddress?.country?.display_name || shippingAddress?.province,
+                billingAddress?.country?.display_name || billingAddress?.province,
               ]
                 .filter(Boolean)
                 .join(", ")}
               <br />
-              {shippingAddress?.phone || customer?.phone}
+              {billingAddress?.phone}
             </p>
           </div>
         </div>
@@ -171,22 +182,22 @@ export default async function OrderCompletedTemplate({
           <div className="flex flex-col items-end text-right sm:mt-0 mt-6">
             <div className="flex justify-between w-56">
               <p className="text-grayscale-500">Subtotal</p>
-              <p className="font-semibold">€{(order.subtotal).toFixed(2)}</p>
+              <p className="font-semibold">€{subtotal.toFixed(2)}</p>
             </div>
             <div className="flex justify-between w-56">
               <p className="text-grayscale-500">Shipping</p>
-              <p className="font-semibold">€{(order.shipping_total).toFixed(2)}</p>
+              <p className="font-semibold">€{shipping.toFixed(2)}</p>
             </div>
             <div className="flex justify-between w-56">
               <p className="text-grayscale-500">Taxes</p>
-              <p className="font-semibold">€{(order.tax_total).toFixed(2)}</p>
+              <p className="font-semibold">€{taxes.toFixed(2)}</p>
             </div>
             <div className="flex justify-between w-56 mt-2">
               <p className="font-semibold text-lg">Total</p>
-              <p className="font-semibold text-lg">€{(order.total).toFixed(2)}</p>
+              <p className="font-semibold text-lg">€{total.toFixed(2)}</p>
             </div>
             <p className="text-xs text-grayscale-500 mt-1">
-              Including {(order.tax_total).toFixed(2)} tax
+              Including €{taxes.toFixed(2)} tax
             </p>
           </div>
         </div>

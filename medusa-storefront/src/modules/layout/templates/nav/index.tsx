@@ -19,16 +19,16 @@ export default function Header() {
   const { mutate: signout, isPending: signingOut } = useSignout()
   const router = useRouter()
 
-  const handleLogout = () => {
-    signout("hr", {
-      onSuccess: () => {
-        setTimeout(() => {
-          router.push("/")
-          router.refresh()
-        }, 200)
-      },
-    })
-  }
+  // const handleLogout = () => {
+  //   signout("hr", {
+  //     onSuccess: () => {
+  //       setTimeout(() => {
+  //         router.push("/")
+  //         router.refresh()
+  //       }, 200)
+  //     },
+  //   })
+  // }
 
   const languages = ["HR", "EN", "DE", "FR", "IT", "ES"]
 
@@ -79,13 +79,9 @@ export default function Header() {
           <CartIcon />
 
           {customer ? (
-            <button
-              onClick={handleLogout}
-              disabled={signingOut}
-              className="hover:opacity-70 transition"
-            >
-              {signingOut ? "Logging out..." : "Logout"}
-            </button>
+            <Link href="/account" className="hover:opacity-70 transition">
+              My Account
+            </Link>
           ) : (
             <Link href="/auth/login" className="hover:opacity-70 transition">
               Login

@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation"
 import PersonalInfoSection from "@/components/PersonalInfoSection"
 import AddressSection from "@/components/AddressSection"
 import ChangePasswordSection from "@/components/ChangePass"
-import { retrieveCustomer, signout } from "@/lib/data/customer"
+import { retrieveCustomer } from "@/lib/data/customer"
 import { listOrdersAcc } from "@/lib/data/orders"
+import { useSignout } from "@/hooks/customer"
 
 export default function AccountPage() {
   const router = useRouter()
@@ -14,6 +15,7 @@ export default function AccountPage() {
   const [orders, setOrders] = useState<any[]>([])
   const [loadingOrders, setLoadingOrders] = useState(false)
   const [customer, setCustomer] = useState<any>(null)
+  const { mutate: signout, isPending: signingOut } = useSignout()
 
   useEffect(() => {
     const loadCustomer = async () => {
@@ -26,10 +28,14 @@ export default function AccountPage() {
     }
     loadCustomer()
   }, [router])
-  
-  const handleLogout = async () => {
-    await signout("hr")
-    router.push("/auth/login")
+
+  const handleLogout = () => {
+    signout("hr", {
+      onSuccess: () => {
+        router.push("/auth/login")
+        router.refresh()
+      },
+    })
   }
 
   const loadOrders = async () => {
@@ -82,9 +88,10 @@ export default function AccountPage() {
 
         <button
           onClick={handleLogout}
-          className="text-sm text-gray-500 hover:text-black transition"
+          disabled={signingOut}
+          className="bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition disabled:opacity-50"
         >
-          Log out
+          {signingOut ? "Logging out..." : "Log out"}
         </button>
       </aside>
 

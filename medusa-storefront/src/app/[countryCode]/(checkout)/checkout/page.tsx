@@ -10,12 +10,13 @@ import { notFound, redirect } from "next/navigation"
 import Review from "@/modules/checkout/components/review"
 import Shipping from "@modules/checkout/components/shipping"
 import Payment from "@modules/checkout/components/payment"
+import Link from "next/link"
 
 export default function Checkout() {
   const [cart, setCart] = useState<any>(null)
   const [customer, setCustomer] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [openStep, setOpenStep] = useState<number | null>(1)
+  const [openSteps, setOpenSteps] = useState<number[]>([1])
   const [email, setEmail] = useState<string>("")
 
   const [addressComplete, setAddressComplete] = useState(false)
@@ -54,10 +55,10 @@ export default function Checkout() {
   if (!cart) return notFound()
 
   const toggleStep = (index: number) => {
-    setOpenStep((prev) => (prev === index ? null : index))
+    setOpenSteps((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    )
   }
-
-  const isEmailValid = (email: string) => /\S+@\S+\.\S+/.test(email)
 
   return (
     <>
@@ -73,9 +74,20 @@ export default function Checkout() {
                 className="flex justify-between items-center cursor-pointer py-3 border-b border-gray-200"
               >
                 <h2 className="font-semibold text-base">1. Email</h2>
-                <span className="text-xl">{openStep === 1 ? "−" : "+"}</span>
+                {!customer && (
+                  <span className="text-sm text-gray-500">
+                    Already have an account? No worries, just{" "}
+                    <Link
+                      href="/auth/login"
+                      className="underline text-gray-700 hover:text-black transition-colors duration-200"
+                    >
+                      Log in
+                    </Link>
+                    .
+                  </span>
+                )}
               </div>
-              {openStep === 1 && (
+              {openSteps.includes(1) && (
                 <div className="space-y-4 mt-4">
                   <input
                     type="email"
@@ -91,12 +103,6 @@ export default function Checkout() {
                       But only if you subscribe.
                     </p>
                   </div>
-                  <button
-                    className="w-28 h-10 bg-black text-white rounded-md text-sm font-medium hover:bg-neutral-900 transition"
-                    disabled={!isEmailValid(email)}
-                  >
-                    Next
-                  </button>
                 </div>
               )}
             </section>
@@ -107,9 +113,9 @@ export default function Checkout() {
                 className="flex justify-between items-center cursor-pointer py-3 border-b border-gray-200"
               >
                 <h2 className="font-semibold text-base">2. Delivery details</h2>
-                <span className="text-xl">{openStep === 2 ? "−" : "+"}</span>
+                <span className="text-xl">{openSteps.includes(2) ? "−" : "+"}</span>
               </div>
-              {openStep === 2 && (
+              {openSteps.includes(2) && (
                 <div className="mt-4">
                   <Addresses
                     cart={cart}
@@ -126,11 +132,12 @@ export default function Checkout() {
                 className="flex justify-between items-center cursor-pointer py-3 border-b border-gray-200"
               >
                 <h2 className="font-semibold text-base">3. Shipping</h2>
-                <span className="text-xl">{openStep === 3 ? "−" : "+"}</span>
+                <span className="text-xl">{openSteps.includes(3) ? "−" : "+"}</span>
               </div>
-              {openStep === 3 && (
+              {openSteps.includes(3) && (
                 <div className="mt-4">
-                  <Shipping cart={cart}
+                  <Shipping
+                    cart={cart}
                     onCartUpdate={(updatedCart) => {
                       setCart(updatedCart)
                       const shippingMethods = updatedCart.shipping_methods ?? []
@@ -151,10 +158,9 @@ export default function Checkout() {
                 className="flex justify-between items-center cursor-pointer py-3 border-b border-gray-200"
               >
                 <h2 className="font-semibold text-base">4. Payment</h2>
-                <span className="text-xl">{openStep === 4 ? "−" : "+"}</span>
+                <span className="text-xl">{openSteps.includes(4) ? "−" : "+"}</span>
               </div>
-
-              {openStep === 4 && (
+              {openSteps.includes(4) && (
                 <div className="mt-4">
                   <Payment
                     cart={cart}
@@ -170,9 +176,9 @@ export default function Checkout() {
                 className="flex justify-between items-center cursor-pointer py-3 border-b border-gray-200"
               >
                 <h2 className="font-semibold text-base">5. Review</h2>
-                <span className="text-xl">{openStep === 5 ? "−" : "+"}</span>
+                <span className="text-xl">{openSteps.includes(5) ? "−" : "+"}</span>
               </div>
-              {openStep === 5 && (
+              {openSteps.includes(5) && (
                 <div className="mt-4">
                   <Review
                     cart={cart}
