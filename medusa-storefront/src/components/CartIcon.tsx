@@ -1,35 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { retrieveCart } from "@lib/data/cart"
+import { useCart } from "@/context/CartContext"
 
 export function CartIcon() {
   const [isOpen, setIsOpen] = useState(false)
-  const [cart, setCart] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-
-  async function loadCart() {
-    try {
-      setLoading(true)
-      const c = await retrieveCart()
-      setCart(c)
-    } catch (err) {
-      console.error("Failed to fetch cart:", err)
-      setCart(null)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadCart()
-  }, [])
-
-  useEffect(() => {
-    if (isOpen) loadCart()
-  }, [isOpen])
+  const { cart, refreshCart, loading } = useCart()
 
   const quantity =
     cart?.items?.reduce((sum: number, item: any) => sum + item.quantity, 0) || 0
@@ -45,7 +23,10 @@ export function CartIcon() {
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setIsOpen(true)
+          refreshCart()
+        }}
         className="relative p-1 hover:opacity-70 transition"
         aria-label="Open cart"
       >

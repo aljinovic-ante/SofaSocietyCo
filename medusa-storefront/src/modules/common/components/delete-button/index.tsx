@@ -4,7 +4,7 @@ import { deleteLineItem } from "@lib/data/cart"
 import { Spinner, Trash } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useCart } from "@/context/CartContext"
 
 const DeleteButton = ({
   id,
@@ -16,14 +16,13 @@ const DeleteButton = ({
   className?: string
 }) => {
   const [isDeleting, setIsDeleting] = useState(false)
-  const router = useRouter()
+  const { refreshCart } = useCart()
 
   const handleDelete = async (id: string) => {
     setIsDeleting(true)
     try {
       await deleteLineItem(id)
-      router.refresh()
-      window.location.reload()
+      await refreshCart()
     } catch (err) {
       console.error("Error deleting item:", err)
     } finally {

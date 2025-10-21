@@ -10,6 +10,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { retrieveCustomer } from "@lib/data/customer"
 import { addToCart } from "@lib/data/cart"
+import { useCart } from "@/context/CartContext"
 
 export default function ProductClient({ product }: { product: any }) {
   const [selectedMaterial, setSelectedMaterial] = useState("")
@@ -94,6 +95,8 @@ export default function ProductClient({ product }: { product: any }) {
 
   const canAddToCart = Boolean(selectedVariant)
 
+  const { refreshCart } = useCart()
+
   const handleAddToCart = async () => {
     if (!selectedVariant) return
     setIsAdding(true)
@@ -107,10 +110,9 @@ export default function ProductClient({ product }: { product: any }) {
         quantity,
         countryCode,
       })
+      await refreshCart()
       setFeedbackMessage({ text: "Item added to cart!", type: "success" })
-      window.location.reload()
     } catch (error) {
-      console.error(error)
       setFeedbackMessage({ text: "Error adding item to cart.", type: "error" })
     } finally {
       setIsAdding(false)

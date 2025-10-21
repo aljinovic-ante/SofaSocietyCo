@@ -1,4 +1,5 @@
 import { ReactQueryProvider } from "@/providers/ReactQueryProvider"
+import { CartProvider } from "@/context/CartContext"
 import "styles/globals.css"
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -6,7 +7,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" data-mode="light">
       <body>
         <ReactQueryProvider>
-          <main className="relative">{props.children}</main>
+          <CartProvider>
+            <main className="relative">{props.children}</main>
+          </CartProvider>
         </ReactQueryProvider>
       </body>
     </html>
