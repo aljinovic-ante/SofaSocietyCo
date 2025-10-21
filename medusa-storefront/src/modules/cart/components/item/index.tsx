@@ -11,6 +11,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import Spinner from "@modules/common/icons/spinner"
 import Thumbnail from "@modules/products/components/thumbnail"
 import LineItemOptions from "@modules/common/components/line-item-options"
+import { useCart } from "@/context/CartContext"
 
 type ItemProps = {
   item: HttpTypes.StoreCartLineItem
@@ -21,18 +22,21 @@ const Item = ({ item, currencyCode }: ItemProps) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [quantity, setQuantity] = useState(item.quantity)
+  const { refreshCart } = useCart()
 
   const changeQuantity = async (newQuantity: number) => {
     if (newQuantity < 1) return
     setError(null)
     setUpdating(true)
     setQuantity(newQuantity)
-    await updateLineItem({ lineId: item.id, quantity: newQuantity })
-      .catch((err) => setError(err.message))
-      .finally(() => {
-        setUpdating(false)
-        window.location.reload()
-      })
+    try {
+      await updateLineItem({ lineId: item.id, quantity: newQuantity })
+      await refreshCart()
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setUpdating(false)
+    }
   }
 
   const maxQtyFromInventory = 10
