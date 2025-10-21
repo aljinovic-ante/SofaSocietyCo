@@ -89,11 +89,6 @@ yarn medusa user -e "admin@medusa.local" -p "supersecret"
 yarn dev
 
 Access server at http://localhost:9000/app with created user.<br> Go to http://localhost:9000/app/settings/publishable-api-keys, copy the publishable key and paste it into  NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY env variable in the storefront/.env.local file.<br>
-Set System as Tax Provider for Croatia In Medusa Admin:
-1. go to settings
-2. Tax regions
-3. Click on Croatia
-4. Add System as Tax Provider (three dots next to No default rate, edit, add...)
 
 <br>
 
@@ -101,7 +96,9 @@ Set System as Tax Provider for Croatia In Medusa Admin:
 cd medusa-storefront
 
 ### Create the .env.local file
-cp .env.template .env.local
+cp .env.local.template .env.local
+
+### Verify that the new publishable key created in Medusa Admin is in .env.local!
 
 ### Install dependencies
 yarn
