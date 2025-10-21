@@ -56,7 +56,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
     'fashionModuleService',
   );
 
-  const countries = ['hr', 'gb', 'de', 'dk', 'se', 'fr', 'es', 'it'];
+  const countries = ['hr'];
 
   logger.info('Seeding store data...');
   const [store] = await storeModuleService.listStores();
@@ -174,34 +174,6 @@ export default async function seedDemoData({ container }: ExecArgs) {
         geo_zones: [
           {
             country_code: 'hr',
-            type: 'country',
-          },
-          {
-            country_code: 'gb',
-            type: 'country',
-          },
-          {
-            country_code: 'de',
-            type: 'country',
-          },
-          {
-            country_code: 'dk',
-            type: 'country',
-          },
-          {
-            country_code: 'se',
-            type: 'country',
-          },
-          {
-            country_code: 'fr',
-            type: 'country',
-          },
-          {
-            country_code: 'es',
-            type: 'country',
-          },
-          {
-            country_code: 'it',
             type: 'country',
           },
         ],
